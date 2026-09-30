@@ -52,11 +52,11 @@ El mantenedor o el sistema de cadencia **no necesita calcular manualmente el nú
 
 ```mermaid
 graph TD
-    Trigger[Gatillo: release-personal.yml con version=vX.Y.Z] --> CheckCDN[Inspecciona omarchy.db.tar.zst en GitHub Pages]
-    CheckCDN --> Eval{¿Existe ya pkgver en el CDN?}
-    Eval -->|No, es una versión nueva| Base99[pkgrel = 99]
-    Eval -->|Sí, es una republicación| Inc[pkgrel = último_pkgrel + 1]
-    Base99 --> Build[Inyecta pkgver y pkgrel en PKGBUILD y compila]
+    Trigger["Gatillo: release-personal.yml con version=vX.Y.Z"] --> CheckCDN["Inspecciona omarchy.db.tar.zst en GitHub Pages"]
+    CheckCDN --> Eval{"¿Existe ya pkgver en el CDN?"}
+    Eval -->|No, es una versión nueva| Base99["pkgrel = 99"]
+    Eval -->|Sí, es una republicación| Inc["pkgrel = último_pkgrel + 1"]
+    Base99 --> Build["Inyecta pkgver y pkgrel en PKGBUILD y compila"]
     Inc --> Build
 ```
 

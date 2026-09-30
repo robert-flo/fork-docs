@@ -28,13 +28,13 @@ Para entender por qué este mecanismo es tan robusto, conviene analizar qué pas
 
 ```mermaid
 graph TD
-    Update[omarchy update] --> Step1[1. pacman -Syu]
-    Step1 --> Step2[2. omarchy-migrate]
-    Step2 --> Step3[3. omarchy-hook post-update]
+    Update["omarchy update"] --> Step1["1. pacman -Syu"]
+    Step1 --> Step2["2. omarchy-migrate"]
+    Step2 --> Step3["3. omarchy-hook post-update"]
     
-    Step1 -->|Descarga desde omarchy-personal-repo| Pkgs[Instala omarchy y omarchy-settings pkgrel=99]
-    Step2 -->|Revisa /usr/share/omarchy/migrations/| Migrations[Ejecuta scripts de migración idempotentes]
-    Step3 -->|Hooks de sistema| Hooks[Refresca fuentes, iconos de escritorio y esquemas]
+    Step1 -->|Descarga desde omarchy-personal-repo| Pkgs["Instala omarchy y omarchy-settings pkgrel=99"]
+    Step2 -->|Revisa /usr/share/omarchy/migrations/| Migrations["Ejecuta scripts de migración idempotentes"]
+    Step3 -->|Hooks de sistema| Hooks["Refresca fuentes, iconos de escritorio y esquemas"]
 ```
 
 1. **`pacman -Syu`:**  

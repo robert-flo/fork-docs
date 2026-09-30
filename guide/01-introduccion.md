@@ -33,10 +33,10 @@ Este proyecto implementa una **Tercera Vía**: tratar las personalizaciones como
 
 ```mermaid
 graph LR
-    Upstream[omacom/omarchy:quattro] -->|Fast-Forward Diario 04:00 AM| Quattro[Fork: rama quattro]
-    Quattro -->|git rebase automático| Personal[Fork: rama personal]
-    Personal -->|CI/CD Docker Build| Packages[omarchy & omarchy-settings pkgrel=99]
-    Packages -->|GitHub Pages CDN| UserMachine[Máquina Cliente: omarchy update]
+    Upstream["omacom/omarchy:quattro"] -->|Fast-Forward Diario 04:00 AM| Quattro["Fork: rama quattro"]
+    Quattro -->|git rebase automático| Personal["Fork: rama personal"]
+    Personal -->|CI/CD Docker Build| Packages["omarchy & omarchy-settings pkgrel=99"]
+    Packages -->|GitHub Pages CDN| UserMachine["Máquina Cliente: omarchy update"]
 ```
 
 ### Principios Fundamentales:

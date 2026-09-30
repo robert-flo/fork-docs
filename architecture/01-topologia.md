@@ -15,26 +15,26 @@ Para lograr una distribución modular, mantenible y desacoplada de upstream, el 
 ```mermaid
 graph TD
     subgraph Upstream ["Upstream Oficial"]
-        UP[omacom/omarchy]
+        UP["omacom/omarchy"]
     end
 
     subgraph Core ["1. Código Fuente: robert-flo/omarchy"]
-        Q[rama quattro: espejo 1:1]
-        P[rama personal: customizaciones]
+        Q["rama quattro: espejo 1:1"]
+        P["rama personal: customizaciones"]
     end
 
     subgraph Factory ["2. Fábrica de Compilación: robert-flo/omarchy-pkgs"]
-        W1[sync-check.yml: cron 04:00 AM]
-        W2[release-personal.yml: Docker + GPG]
+        W1["sync-check.yml: cron 04:00 AM"]
+        W2["release-personal.yml: Docker + GPG"]
     end
 
     subgraph CDN ["3. Repositorio Pacman: robert-flo/omarchy-personal-repo"]
-        DB[(omarchy.db.tar.zst)]
-        PKG[(omarchy-*.pkg.tar.zst)]
+        DB[("omarchy.db.tar.zst")]
+        PKG[("omarchy-*.pkg.tar.zst")]
     end
 
     subgraph Docs ["4. Estándar de Oro: robert-flo/fork-docs"]
-        DOCS[Portal Web en GitHub Pages]
+        DOCS["Portal Web en GitHub Pages"]
     end
 
     UP -->|git fetch diario| Q
@@ -42,7 +42,7 @@ graph TD
     W1 -->|detecta nuevo tag| W2
     W2 -->|SSH Deploy Key| P
     W2 -->|Docker Build & GPG Sign| CDN
-    CDN -->|HTTPS / pacman -Syu| User[Máquinas del Usuario]
+    CDN -->|HTTPS / pacman -Syu| User["Máquinas del Usuario"]
     Docs -.->|Guía y reglas autoritativas| Core
     Docs -.->|Guía y reglas autoritativas| Factory
 ```

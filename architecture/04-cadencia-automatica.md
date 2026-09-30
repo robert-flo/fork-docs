@@ -14,20 +14,20 @@ Para garantizar que el fork personal nunca quede rezagado frente al desarrollo c
 
 ```mermaid
 graph TD
-    Cron[04:00 AM Cron / Dispatch] --> Check[sync-check.yml: Detecta nuevo tag vX.Y.Z]
-    Check --> IssueOpen[Abre GitHub Issue: Cadencia vX.Y.Z detectado]
-    IssueOpen --> Trigger[Dispara release-personal.yml]
-    Trigger --> SyncQuattro[1. Fetch upstream & Fast-Forward quattro]
-    SyncQuattro --> Rebase[2. git rebase quattro sobre personal]
-    Rebase -->|Rebase Exitoso| PushPersonal[Push quattro & personal a GitHub]
-    PushPersonal --> Build[Compilación Arch Linux & Firma GPG]
-    Build --> Publish[Publicación a gh-pages]
-    Publish --> Verify[Validación HTTP 200 en GitHub Pages]
-    Verify --> IssueClose[Auto-cierre del GitHub Issue con reporte]
+    Cron["04:00 AM Cron / Dispatch"] --> Check["sync-check.yml: Detecta nuevo tag vX.Y.Z"]
+    Check --> IssueOpen["Abre GitHub Issue: Cadencia vX.Y.Z detectado"]
+    IssueOpen --> Trigger["Dispara release-personal.yml"]
+    Trigger --> SyncQuattro["1. Fetch upstream & Fast-Forward quattro"]
+    SyncQuattro --> Rebase["2. git rebase quattro sobre personal"]
+    Rebase -->|Rebase Exitoso| PushPersonal["Push quattro & personal a GitHub"]
+    PushPersonal --> Build["Compilación Arch Linux & Firma GPG"]
+    Build --> Publish["Publicación a gh-pages"]
+    Publish --> Verify["Validación HTTP 200 en GitHub Pages"]
+    Verify --> IssueClose["Auto-cierre del GitHub Issue con reporte"]
     
-    Rebase -->|Conflicto de Código| AbortRebase[git rebase --abort]
-    AbortRebase --> AlertIssue[Abre/Actualiza Issue: Alerta de Conflicto]
-    AlertIssue --> StopPipeline[Fin seguro: no se publican paquetes rotos]
+    Rebase -->|Conflicto de Código| AbortRebase["git rebase --abort"]
+    AbortRebase --> AlertIssue["Abre/Actualiza Issue: Alerta de Conflicto"]
+    AlertIssue --> StopPipeline["Fin seguro: no se publican paquetes rotos"]
 ```
 
 ---

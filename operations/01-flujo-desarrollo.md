@@ -20,10 +20,10 @@ Editar código en el fork  →  omarchy dev pkg-test  →  omarchy refresh <comp
 
 ```mermaid
 graph LR
-    Code[1. Editas archivo en ~/Work/omarchy/robert-flo_omarchy-personal] --> PkgTest[2. omarchy dev pkg-test]
-    PkgTest --> LocalInstall[3. Compila e instala paquete dev.SHA]
-    LocalInstall --> Refresh[4. omarchy refresh config / app]
-    Refresh --> Test[5. Prueba inmediata en el escritorio]
+    Code["1. Editas archivo en el fork local"] --> PkgTest["2. omarchy dev pkg-test"]
+    PkgTest --> LocalInstall["3. Compila e instala paquete dev.SHA"]
+    LocalInstall --> Refresh["4. omarchy refresh config / app"]
+    Refresh --> Test["5. Prueba inmediata en el escritorio"]
 ```
 
 ### Paso 1: Edición en el Fork

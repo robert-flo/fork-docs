@@ -32,17 +32,17 @@ Todo el modelo de trabajo en el fork se divide en dos escenarios mutuamente excl
 ```mermaid
 graph TD
     subgraph Escenario1 ["Escenario DEV (Validar en local)"]
-        D1[Editar código fuente en el fork] --> D2[omarchy dev pkg-test]
-        D2 --> D3[Instala paquetes dev.SHA localmente]
-        D3 --> D4[omarchy refresh ... para probar en vivo]
-        D4 --> D5[Validación exitosa: la máquina dev queda en línea -dev]
+        D1["Editar código fuente en el fork"] --> D2["omarchy dev pkg-test"]
+        D2 --> D3["Instala paquetes dev.SHA localmente"]
+        D3 --> D4["omarchy refresh ... para probar en vivo"]
+        D4 --> D5["Validación exitosa: la máquina dev queda en línea -dev"]
     end
 
     subgraph Escenario2 ["Escenario MÁQUINAS (Distribuir a producción)"]
-        M1[git commit & push a rama personal] --> M2[GitHub Actions release-personal.yml]
-        M2 --> M3[Compilación en Docker Arch Linux y firma GPG]
-        M3 --> M4[Publicación de paquetes sombreados en omarchy-personal-repo]
-        M4 --> M5[omarchy update en cada computadora cliente]
+        M1["git commit & push a rama personal"] --> M2["GitHub Actions release-personal.yml"]
+        M2 --> M3["Compilación en Docker Arch Linux y firma GPG"]
+        M3 --> M4["Publicación de paquetes sombreados en omarchy-personal-repo"]
+        M4 --> M5["omarchy update en cada computadora cliente"]
     end
 ```
 

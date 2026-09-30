@@ -1,0 +1,110 @@
+<style>
+  .mermaid-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    overflow-x: auto;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: var(--vp-c-bg-soft);
+    border: 1px solid var(--vp-c-divider);
+    transition: background-color 0.25s, border-color 0.25s;
+  }
+  .mermaid-wrapper svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+  let currentDiagramId = 0;
+
+  function initMermaid(isDark) {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+      securityLevel: 'loose',
+      fontFamily: 'Inter, system-ui, -apple-system, sans-serif'
+    });
+  }
+
+  async function renderMermaidDiagrams() {
+    const isDark = document.documentElement.classList.contains('dark');
+    initMermaid(isDark);
+
+    // Target code blocks rendered by kramdown with language-mermaid
+    const candidates = document.querySelectorAll('pre > code.language-mermaid, .language-mermaid pre > code, code.language-mermaid');
+    const processedPres = new Set();
+
+    for (const codeEl of candidates) {
+      const preEl = codeEl.closest('pre');
+      if (!preEl || processedPres.has(preEl) || preEl.dataset.mermaidProcessed === 'true') continue;
+      processedPres.add(preEl);
+
+      const rawCode = codeEl.textContent.trim();
+      if (!rawCode) continue;
+
+      preEl.dataset.mermaidProcessed = 'true';
+      const diagId = 'mermaid-diag-' + (++currentDiagramId);
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'mermaid-wrapper';
+      wrapper.dataset.mermaidSource = rawCode;
+
+      try {
+        const { svg } = await mermaid.render(diagId, rawCode);
+        wrapper.innerHTML = svg;
+        const container = preEl.closest('.highlighter-rouge') || preEl;
+        container.replaceWith(wrapper);
+      } catch (err) {
+        console.error('Error rendering Mermaid diagram:', err, rawCode);
+        preEl.dataset.mermaidProcessed = 'error';
+      }
+    }
+  }
+
+  async function reRenderAll(isDark) {
+    initMermaid(isDark);
+    const existingWrappers = document.querySelectorAll('.mermaid-wrapper');
+    for (const wrapper of existingWrappers) {
+      const rawCode = wrapper.dataset.mermaidSource;
+      if (!rawCode) continue;
+      const diagId = 'mermaid-diag-re-' + (++currentDiagramId);
+      try {
+        const { svg } = await mermaid.render(diagId, rawCode);
+        wrapper.innerHTML = svg;
+      } catch (err) {
+        console.error('Error re-rendering Mermaid diagram:', err);
+      }
+    }
+  }
+
+  // Initial load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => renderMermaidDiagrams());
+  } else {
+    renderMermaidDiagrams();
+  }
+
+  // Turbo navigation support
+  document.addEventListener('turbo:frame-load', (e) => {
+    if (e.target && e.target.id === 'vp-content-frame') {
+      renderMermaidDiagrams();
+    }
+  });
+
+  // Dark/light mode theme toggle observer
+  let lastDark = document.documentElement.classList.contains('dark');
+  const observer = new MutationObserver(() => {
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark !== lastDark) {
+      lastDark = isDark;
+      reRenderAll(isDark);
+    }
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+</script>
