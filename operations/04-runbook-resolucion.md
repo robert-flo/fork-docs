@@ -124,3 +124,103 @@ El workflow `release-personal.yml` falla con cruz roja en el paso `Compila paque
    ```bash
    gh workflow run builder-images.yml -R robert-flo/omarchy-pkgs
    ```
+
+---
+
+## 5. Incidencia: Fallo Transitorio de Red (TLS / Rate Limit de GitHub)
+
+### Síntoma:
+El workflow `release-personal.yml` falla con error de conexión durante la descarga de paquetes de Arch Linux (`archlinux.org` TLS error) o debido a un rate limit de la API de GitHub.
+
+### Causa:
+Fallo de red transitorio en el runner de GitHub Actions. No es un error del código ni del repositorio.
+
+### Solución:
+Re-disparar el workflow tal cual. El proceso es **idempotente**: si el pin ya fue commiteado a la rama `personal` antes del fallo, el re-dispatch lo detecta y continúa desde ese estado:
+
+```bash
+gh workflow run release-personal.yml -R robert-flo/omarchy-pkgs \
+  --ref personal -f version=vX.Y.Z
+```
+
+> **Nota:** Si el fallo ocurrió **después** de publicar en Pages (por ejemplo, el paso de validación HTTP), consulta la Incidencia 3 (firma corrupta o push fallido).
+
+---
+
+## 6. Incidencia: Rotación o Pérdida de Clave GPG / Deploy Key
+
+### Síntoma:
+La clave privada GPG o la deploy key SSH podrían haberse comprometido, perdido o requieren rotación periódica por política de seguridad.
+
+### Solución:
+Ver el procedimiento completo en **[Rotación de Claves GPG & DR](/fork-docs/operations/03-rotacion-claves/)**.
+
+**Resumen de urgencia:**
+
+| Clave perdida | Acción inmediata |
+| :--- | :--- |
+| `GPG_PRIVATE_KEY` | Genera nuevo par RSA 4096-bit → actualiza secret en `omarchy-pkgs` → publica nueva `.asc` pública → en cada máquina: `pacman-key --add` + `--lsign-key` de la nueva clave **antes** de cualquier `omarchy update`. |
+| `SSH_DEPLOY_KEY` | Regenerar en `omarchy-personal-repo` (Settings → Deploy keys) → actualizar secret en `omarchy-pkgs`. |
+| `SSH_OMARCHY_SOURCE_KEY` | Regenerar en `robert-flo/omarchy` (Settings → Deploy keys) → actualizar secret en `omarchy-pkgs`. |
+
+> **Atención:** La clave privada GPG **solo existe como secret de GitHub Actions**. Nunca se versiona en ningún repositorio. Cualquier sospecha de filtración = rotación inmediata.
+
+---
+
+## 7. Incidencia: Rescate Manual de una Máquina
+
+### Síntoma:
+Una máquina quedó instalada con la versión oficial del par (perdió las personalizaciones) y no puedes esperar al próximo `omarchy update`.
+
+### Causa:
+El par oficial (`pkgrel=1`) reemplazó al par personal (`pkgrel=99+`) porque el repositorio personal estaba caído o la sección `[omarchy-personal]` no estaba antes de `[omarchy]` en `pacman.conf`.
+
+### Procedimiento de recuperación:
+
+```bash
+# 1. Descarga el par actual directamente desde el CDN
+REPO="https://robert-flo.github.io/omarchy-personal-repo/stable/x86_64"
+VER="<versión-actual>"   # consulta reference/historial-cambios para el valor actual
+
+curl -O "$REPO/omarchy-${VER}-any.pkg.tar.zst"
+curl -O "$REPO/omarchy-${VER}-any.pkg.tar.zst.sig"
+curl -O "$REPO/omarchy-settings-${VER}-any.pkg.tar.zst"
+curl -O "$REPO/omarchy-settings-${VER}-any.pkg.tar.zst.sig"
+
+# 2. Instala ambos al mismo tiempo (lockstep obligatorio)
+sudo pacman -U omarchy-${VER}-any.pkg.tar.zst \
+               omarchy-settings-${VER}-any.pkg.tar.zst
+
+# 3. Reescribe pacman.conf con el orden correcto de repositorios
+sudo omarchy refresh pacman
+
+# 4. Actualiza normalmente
+omarchy update -y
+```
+
+Después, la máquina regresa a la cadencia normal con `omarchy update`.
+
+---
+
+## 8. Incidencia: `omarchy update` Pide Contraseña y Falla
+
+### Síntoma:
+En sesiones sin terminal real (scripts de cron, SSH sin pseudo-terminal), `omarchy update` falla porque `sudo -v` pide contraseña interactivamente y no puede recibirla.
+
+### Causa:
+Quirk de `sudo -v` en el cliente `omarchy` cuando no hay TTY disponible. No es un fallo del repositorio ni del par de paquetes.
+
+### Solución:
+
+```bash
+# Opción A (recomendada): ejecutar desde una sesión de terminal real
+omarchy update
+
+# Opción B: pre-autenticar sudo antes del comando
+sudo -v && omarchy update
+
+# Opción C: drop-in temporal en sudoers solo para automatización puntual
+echo "Defaults:$USER !authenticate" | sudo tee /etc/sudoers.d/omarchy-temp
+omarchy update
+sudo rm /etc/sudoers.d/omarchy-temp
+```
