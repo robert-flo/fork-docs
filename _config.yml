@@ -2,6 +2,7 @@ title: Fork Docs
 description: "Documentación canónica y estándar de oro para el ecosistema de fork personal"
 url: "https://robert-flo.github.io"
 baseurl: "/fork-docs"
+permalink: pretty
 
 theme: jekyll-vitepress-theme
 plugins:
