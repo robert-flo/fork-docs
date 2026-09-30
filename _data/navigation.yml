@@ -1,0 +1,10 @@
+- title: "Guía"
+  url: /guide/01-introduccion/
+- title: "Arquitectura"
+  url: /architecture/01-topologia/
+- title: "Operaciones"
+  url: /operations/01-flujo-desarrollo/
+- title: "ADRs"
+  url: /adrs/
+- title: "Referencia"
+  url: /reference/glosario/

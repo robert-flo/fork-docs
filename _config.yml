@@ -1,0 +1,21 @@
+title: Fork Docs
+description: "Documentación canónica y estándar de oro para el ecosistema de fork personal"
+url: "https://robert-flo.github.io"
+baseurl: "/fork-docs"
+
+theme: jekyll-vitepress-theme
+plugins:
+  - jekyll-vitepress-theme
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+jekyll_vitepress:
+  branding:
+    site_title: Fork Docs
+  github_star:
+    enabled: true
+    repository: robert-flo/fork-docs

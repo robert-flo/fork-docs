@@ -1,0 +1,115 @@
+- title: "Guía de Usuario"
+  items:
+    - title: "1. Introducción & Filosofía"
+      url: /guide/01-introduccion/
+    - title: "2. Onboarding de Máquinas"
+      url: /guide/02-onboarding-maquinas/
+    - title: "3. Uso Diario & Actualizaciones"
+      url: /guide/03-uso-diario/
+  docs:
+    - title: "1. Introducción & Filosofía"
+      url: /guide/01-introduccion/
+    - title: "2. Onboarding de Máquinas"
+      url: /guide/02-onboarding-maquinas/
+    - title: "3. Uso Diario & Actualizaciones"
+      url: /guide/03-uso-diario/
+
+- title: "Arquitectura del Sistema"
+  items:
+    - title: "1. Topología del Ecosistema"
+      url: /architecture/01-topologia/
+    - title: "2. Matriz de Decisión Canónica"
+      url: /architecture/02-matriz-de-decision/
+    - title: "3. Sombreado & Versionado (pkgrel 99)"
+      url: /architecture/03-sombreado-y-versionado/
+    - title: "4. Cadencia 04:00 AM & Rebase"
+      url: /architecture/04-cadencia-automatica/
+    - title: "5. Modelo de Seguridad GPG"
+      url: /architecture/05-modelo-seguridad-gpg/
+  docs:
+    - title: "1. Topología del Ecosistema"
+      url: /architecture/01-topologia/
+    - title: "2. Matriz de Decisión Canónica"
+      url: /architecture/02-matriz-de-decision/
+    - title: "3. Sombreado & Versionado (pkgrel 99)"
+      url: /architecture/03-sombreado-y-versionado/
+    - title: "4. Cadencia 04:00 AM & Rebase"
+      url: /architecture/04-cadencia-automatica/
+    - title: "5. Modelo de Seguridad GPG"
+      url: /architecture/05-modelo-seguridad-gpg/
+
+- title: "Mantenimiento & Operaciones"
+  items:
+    - title: "1. Ciclo de Desarrollo Local"
+      url: /operations/01-flujo-desarrollo/
+    - title: "2. Añadir un Paquete Personal"
+      url: /operations/02-anadir-paquete/
+    - title: "3. Rotación de Claves GPG & DR"
+      url: /operations/03-rotacion-claves/
+    - title: "4. Runbook de Contingencias"
+      url: /operations/04-runbook-resolucion/
+  docs:
+    - title: "1. Ciclo de Desarrollo Local"
+      url: /operations/01-flujo-desarrollo/
+    - title: "2. Añadir un Paquete Personal"
+      url: /operations/02-anadir-paquete/
+    - title: "3. Rotación de Claves GPG & DR"
+      url: /operations/03-rotacion-claves/
+    - title: "4. Runbook de Contingencias"
+      url: /operations/04-runbook-resolucion/
+
+- title: "Decisiones Arquitectónicas (ADRs)"
+  items:
+    - title: "Índice de ADRs"
+      url: /adrs/
+    - title: "ADR-001: Pacman en GitHub Pages"
+      url: /adrs/ADR-001/
+    - title: "ADR-002: Canal Stable Único"
+      url: /adrs/ADR-002/
+    - title: "ADR-003: Sombreado Parcial"
+      url: /adrs/ADR-003/
+    - title: "ADR-004: Regla del pkgrel 99+"
+      url: /adrs/ADR-004/
+    - title: "ADR-005: Marcador Personal"
+      url: /adrs/ADR-005/
+    - title: "ADR-006: Claves GPG y Recuperación"
+      url: /adrs/ADR-006/
+    - title: "ADR-007: Compilación Containerizada"
+      url: /adrs/ADR-007/
+    - title: "ADR-008: Cadencia Desatendida 04:00 AM"
+      url: /adrs/ADR-008/
+    - title: "ADR-009: Desacoplamiento Documental"
+      url: /adrs/ADR-009/
+  docs:
+    - title: "Índice de ADRs"
+      url: /adrs/
+    - title: "ADR-001: Pacman en GitHub Pages"
+      url: /adrs/ADR-001/
+    - title: "ADR-002: Canal Stable Único"
+      url: /adrs/ADR-002/
+    - title: "ADR-003: Sombreado Parcial"
+      url: /adrs/ADR-003/
+    - title: "ADR-004: Regla del pkgrel 99+"
+      url: /adrs/ADR-004/
+    - title: "ADR-005: Marcador Personal"
+      url: /adrs/ADR-005/
+    - title: "ADR-006: Claves GPG y Recuperación"
+      url: /adrs/ADR-006/
+    - title: "ADR-007: Compilación Containerizada"
+      url: /adrs/ADR-007/
+    - title: "ADR-008: Cadencia Desatendida 04:00 AM"
+      url: /adrs/ADR-008/
+    - title: "ADR-009: Desacoplamiento Documental"
+      url: /adrs/ADR-009/
+
+- title: "Referencia & Historial"
+  items:
+    - title: "Glosario de Términos"
+      url: /reference/glosario/
+    - title: "Historial de Cambios Consolidado"
+      url: /reference/historial-cambios/
+  docs:
+    - title: "Glosario de Términos"
+      url: /reference/glosario/
+    - title: "Historial de Cambios Consolidado"
+      url: /reference/historial-cambios/
