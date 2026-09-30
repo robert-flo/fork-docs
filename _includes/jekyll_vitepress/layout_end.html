@@ -56,8 +56,9 @@
       wrapper.dataset.mermaidSource = rawCode;
 
       try {
-        const { svg } = await mermaid.render(diagId, rawCode);
+        const { svg, bindFunctions } = await mermaid.render(diagId, rawCode);
         wrapper.innerHTML = svg;
+        if (bindFunctions) bindFunctions(wrapper);
         const container = preEl.closest('.highlighter-rouge') || preEl;
         container.replaceWith(wrapper);
       } catch (err) {
@@ -75,8 +76,9 @@
       if (!rawCode) continue;
       const diagId = 'mermaid-diag-re-' + (++currentDiagramId);
       try {
-        const { svg } = await mermaid.render(diagId, rawCode);
+        const { svg, bindFunctions } = await mermaid.render(diagId, rawCode);
         wrapper.innerHTML = svg;
+        if (bindFunctions) bindFunctions(wrapper);
       } catch (err) {
         console.error('Error re-rendering Mermaid diagram:', err);
       }
@@ -91,6 +93,7 @@
   }
 
   // Turbo navigation support
+  document.addEventListener('turbo:load', () => renderMermaidDiagrams());
   document.addEventListener('turbo:frame-load', (e) => {
     if (e.target && e.target.id === 'vp-content-frame') {
       renderMermaidDiagrams();
