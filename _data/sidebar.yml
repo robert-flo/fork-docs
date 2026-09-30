@@ -40,6 +40,8 @@
 
 - title: "Mantenimiento & Operaciones"
   items:
+    - title: "Recetas Rápidas (W1–W10)"
+      url: /operations/00-recetas-rapidas/
     - title: "1. Ciclo de Desarrollo Local"
       url: /operations/01-flujo-desarrollo/
     - title: "2. Añadir un Paquete Personal"
@@ -49,6 +51,8 @@
     - title: "4. Runbook de Contingencias"
       url: /operations/04-runbook-resolucion/
   docs:
+    - title: "Recetas Rápidas (W1–W10)"
+      url: /operations/00-recetas-rapidas/
     - title: "1. Ciclo de Desarrollo Local"
       url: /operations/01-flujo-desarrollo/
     - title: "2. Añadir un Paquete Personal"
