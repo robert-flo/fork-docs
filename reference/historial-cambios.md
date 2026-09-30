@@ -10,6 +10,29 @@ Este documento unifica y centraliza el registro histórico de cambios, hitos de 
 
 ---
 
+## Estado Actual del Sistema
+
+> **Esta tabla es la fuente única de verdad para los valores operacionales del proyecto.**
+> Cuando la clave GPG rote, el par se actualice o el CDN cambie, **solo esta sección debe editarse**.
+> Todos los demás documentos del portal deben hacer referencia aquí en lugar de hardcodear estos valores.
+
+| Campo | Valor actual |
+| :--- | :--- |
+| **Par lockstep (pkgver-pkgrel)** | `4.0.4-99` (Omarchy upstream v4.0.4) |
+| **Key ID GPG** | `76AFFCC217DB9FC4` |
+| **Fingerprint GPG** | `CD92 AB07 B1D2 4DC9 A74E  B60E 76AF FCC2 17DB 9FC4` |
+| **Tipo de clave** | RSA 4096-bit |
+| **CDN URL** | `https://robert-flo.github.io/omarchy-personal-repo/stable/x86_64` |
+| **Clave pública (.asc)** | `https://robert-flo.github.io/omarchy-personal-repo/keys/omarchy-personal-repo.pub.asc` |
+| **Empaquetador canónico** | `Roberto Flores <25asab015@ujmd.edu.sv>` |
+| **Última rotación de clave** | 2026-09-30 |
+
+**Cómo actualizar esta tabla:**
+- **Nuevo pkgver/pkgrel:** editar la fila "Par lockstep" con la versión publicada más reciente.
+- **Rotación de clave GPG:** editar las filas Key ID, Fingerprint y fecha. Ver procedimiento completo en [Rotación de Claves GPG & DR](/fork-docs/operations/03-rotacion-claves/).
+
+---
+
 ## [2026-09-30] — Cadencia Desatendida, Rotación GPG y Portal Canónico
 
 ### 1. Desacoplamiento Documental y Portal Web (`fork-docs`)
