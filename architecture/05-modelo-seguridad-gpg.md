@@ -6,9 +6,12 @@ description: "Infraestructura criptográfica GPG RSA 4096-bit, custodia de secre
 
 # Modelo de Seguridad GPG
 
+> **Valores canónicos de la clave vigente:** consulta siempre la tabla **[Estado Actual del Sistema](/fork-docs/reference/historial-cambios/)** para Key ID, Fingerprint y fecha de última rotación. Los valores en este documento son de contexto arquitectónico; la tabla de estado es la fuente de verdad operacional.
+
 La integridad y autenticidad del software distribuido por el repositorio pacman descansa sobre una infraestructura criptográfica basada en **GnuPG (GPG)**, formalizada en el **ADR-006**.
 
 Esta arquitectura garantiza que ninguna máquina cliente instale paquetes que hayan sido alterados durante el tránsito o generados fuera de nuestro entorno de compilación de confianza.
+
 
 ---
 
