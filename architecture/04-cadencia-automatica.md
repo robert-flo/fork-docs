@@ -8,6 +8,8 @@ description: "Pipeline desatendido de las 04:00 AM: fetch de omacom:quattro, Fas
 
 Para garantizar que el fork personal nunca quede rezagado frente al desarrollo continuo de Omarchy oficial sin requerir que el mantenedor esté pendiente de cada commit, el sistema incorpora un **pipeline de cadencia desatendida (*zero-touch*) a las 04:00 AM**, formalizado en el **ADR-008**.
 
+> **Excepción ADR 0024 (`robert-flo/omarchy-pkgs`):** El caller nocturno de fleet **no** corre en pkgs. `personal` ahí es un pin/release curado (par lockstep + recetas `"personal": true`); rebasearla sobre `omacom/omarchy-pkgs:master` choca con el pin y el CI del fork, y un *force-with-lease* nocturno competiría con `release-personal.yml`. El default de GitHub permanece en `master` (copias de registro de `release-personal.yml` / `sync-check.yml`). La cadencia de pkgs compara tags de `omacom/omarchy` con `sync-check.yml`; el Fast-Forward de `upstream` (`← omacom:quattro`) y el rebase de `personal` ocurren en **`robert-flo/omarchy`**, disparados por `release-personal.yml`. Evidencia: [robert-flo/omarchy-pkgs#8](https://github.com/robert-flo/omarchy-pkgs/issues/8) · política: [ADR 0024](https://github.com/robert-flo/fleet/blob/main/docs/adr/0024-personal-y-upstream-en-cada-fork.md).
+
 ---
 
 ## 1. Diagrama de Flujo del Pipeline
@@ -47,7 +49,7 @@ graph TD
 ### Fase 2: Sincronización y Rebase en el Código Fuente
 * El runner de GitHub Actions clona `robert-flo/omarchy` autenticado mediante la deploy key SSH `SSH_OMARCHY_SOURCE_KEY` (con permisos de escritura).
 * **Fast-Forward de `upstream`:** Se conecta con `https://github.com/omacom/omarchy.git`, hace fetch de la rama **`quattro` de omacom** (ellos conservan ese nombre) y avanza el espejo local `upstream` en `robert-flo/omarchy` por Fast-Forward hasta ese commit, sincronizando también los tags.
-* **Rebase de `personal`:** Cambia a la rama `personal` (default de GitHub) y ejecuta `git rebase upstream`. Esto trasplanta todas nuestras personalizaciones justo encima de la última base del espejo.
+* **Rebase de `personal`:** Cambia a la rama `personal` de `robert-flo/omarchy` (rama por defecto de GitHub **en ese repositorio**) y ejecuta `git rebase upstream`. Esto trasplanta todas nuestras personalizaciones justo encima de la última base del espejo.
 * Si el rebase es limpio, hace push seguro (`git push origin upstream` y `git push --force-with-lease origin personal`).
 
 ---

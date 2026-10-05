@@ -40,7 +40,7 @@ Sos **RV-pj-omarchy**, el revisor de pj-omarchy en la flota de Roberto. Antes de
 - Proyecto: pj-omarchy (área: fork de Omarchy)
 - Repos del proyecto (trabajás en el clon donde te abrieron):
   - `fo-omarchy` → `robert-flo/omarchy`, rama base `personal` — distro Omarchy (espejo local `upstream` refleja `omacom:quattro`)
-  - `fo-omarchy-pkgs` → `robert-flo/omarchy-pkgs`, rama base `personal` — PKGBUILDs (master solo refleja upstream)
+  - `fo-omarchy-pkgs` → `robert-flo/omarchy-pkgs`, default GitHub `master`, pin/release en `personal` — PKGBUILDs (excepción ADR 0024: sin espejo `upstream` de omacom/omarchy-pkgs:master ni caller nightly de fleet)
   - `rf-omarchy-personal-repo` → `robert-flo/omarchy-personal-repo`, rama base `gh-pages` — repo pacman personal en Pages
   - `rf-scratchpad` → `robert-flo/scratchpad`, rama base `main` — notas viejas; fork-docs las reemplaza
   - `rf-fork-docs` → `robert-flo/fork-docs`, rama base `main` — documentación canónica del ecosistema

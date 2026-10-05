@@ -66,6 +66,8 @@ graph TD
   * **Workflows de GitHub Actions:**
     * `sync-check.yml`: Cron a las 04:00 AM que compara tags upstream.
     * `release-personal.yml`: Pipeline que sincroniza ramas, compila con Docker, firma con GPG y publica en el CDN.
+* **Ramas:** El default de GitHub es **`master`** (copias de registro de `release-personal.yml` y `sync-check.yml`). El pin del par lockstep y las recetas `"personal": true` viven en **`personal`**.
+* **Excepción al [ADR 0024](https://github.com/robert-flo/fleet/blob/main/docs/adr/0024-personal-y-upstream-en-cada-fork.md) de fleet:** Este fork **no** recibe el modelo por defecto (`personal` como rama default, espejo `upstream` de `omacom/omarchy-pkgs:master`, ni el caller nocturno de sync de fleet). `personal` aquí es un pin/release **curado**; rebasearla sobre `omacom/master` choca con el pin y con el CI del fork, y un *force-with-lease* nocturno competiría con `release-personal.yml`. El Fast-Forward/rebase ocurre en `robert-flo/omarchy` (`upstream` ← `omacom:quattro`) desde `release-personal.yml`; la cadencia de pkgs compara tags de `omacom/omarchy` vía `sync-check.yml`. Evidencia: [robert-flo/omarchy-pkgs#8](https://github.com/robert-flo/omarchy-pkgs/issues/8).
 * **Secretos:** Custodia `GPG_PRIVATE_KEY` (clave privada para firmar) y `SSH_OMARCHY_SOURCE_KEY` (deploy key para hacer push al repositorio fuente).
 
 ### Pilar 3: CDN de Distribución Pacman (`robert-flo/omarchy-personal-repo`)
