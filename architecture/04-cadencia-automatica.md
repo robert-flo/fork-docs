@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Cadencia 04:00 AM & Rebase
-description: "Pipeline desatendido de las 04:00 AM con sincronización quattro, rebase de personal y escudo ante conflictos."
+description: "Pipeline desatendido de las 04:00 AM: fetch de omacom:quattro, Fast-Forward del espejo local upstream, rebase de personal y escudo ante conflictos."
 ---
 
 # Cadencia 04:00 AM & Rebase
@@ -17,9 +17,9 @@ graph TD
     Cron["04:00 AM Cron / Dispatch"] --> Check["sync-check.yml: Detecta nuevo tag vX.Y.Z"]
     Check --> IssueOpen["Abre GitHub Issue: Cadencia vX.Y.Z detectado"]
     IssueOpen --> Trigger["Dispara release-personal.yml"]
-    Trigger --> SyncQuattro["1. Fetch upstream & Fast-Forward quattro"]
-    SyncQuattro --> Rebase["2. git rebase quattro sobre personal"]
-    Rebase -->|Rebase Exitoso| PushPersonal["Push quattro & personal a GitHub"]
+    Trigger --> SyncUpstream["1. Fetch omacom:quattro & Fast-Forward espejo local upstream"]
+    SyncUpstream --> Rebase["2. git rebase upstream sobre personal"]
+    Rebase -->|Rebase Exitoso| PushPersonal["Push upstream & personal a GitHub"]
     PushPersonal --> Build["Compilación Arch Linux & Firma GPG"]
     Build --> Publish["Publicación a gh-pages"]
     Publish --> Verify["Validación HTTP 200 en GitHub Pages"]
@@ -46,9 +46,9 @@ graph TD
 
 ### Fase 2: Sincronización y Rebase en el Código Fuente
 * El runner de GitHub Actions clona `robert-flo/omarchy` autenticado mediante la deploy key SSH `SSH_OMARCHY_SOURCE_KEY` (con permisos de escritura).
-* **Fast-Forward de `quattro`:** Se conecta con `https://github.com/omacom/omarchy.git` y avanza la rama `quattro` directamente al commit upstream, sincronizando también los tags.
-* **Rebase de `personal`:** Cambia a la rama `personal` y ejecuta `git rebase quattro`. Esto trasplanta todas nuestras personalizaciones justo encima de la última base de upstream.
-* Si el rebase es limpio, hace push seguro (`git push origin quattro` y `git push --force-with-lease origin personal`).
+* **Fast-Forward de `upstream`:** Se conecta con `https://github.com/omacom/omarchy.git`, hace fetch de la rama **`quattro` de omacom** (ellos conservan ese nombre) y avanza el espejo local `upstream` en `robert-flo/omarchy` por Fast-Forward hasta ese commit, sincronizando también los tags.
+* **Rebase de `personal`:** Cambia a la rama `personal` (default de GitHub) y ejecuta `git rebase upstream`. Esto trasplanta todas nuestras personalizaciones justo encima de la última base del espejo.
+* Si el rebase es limpio, hace push seguro (`git push origin upstream` y `git push --force-with-lease origin personal`).
 
 ---
 
@@ -73,7 +73,7 @@ graph TD
 
 Para evitar que el pipeline falle a medias o que se publiquen paquetes inconsistentes, el workflow implementa una barrera de contención estricta:
 
-1. **Detección Inmediata:** Si `git rebase quattro` devuelve un código de salida distinto de cero, el script captura inmediatamente la lista de archivos con conflicto (`git diff --name-only --diff-filter=U`).
+1. **Detección Inmediata:** Si `git rebase upstream` devuelve un código de salida distinto de cero, el script captura inmediatamente la lista de archivos con conflicto (`git diff --name-only --diff-filter=U`).
 2. **Aborto Limpio:** Ejecuta `git rebase --abort` para devolver el repositorio fuente exactamente a su estado previo sin dejar commits huérfanos ni marcas de conflicto en el código.
 3. **Alerta Temprana en GitHub Issues:** Crea un issue de alerta urgente titulado:  
    `[Conflicto Rebase] Sincronización de personal requiere intervención manual`.

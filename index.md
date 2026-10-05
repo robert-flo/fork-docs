@@ -18,7 +18,7 @@ hero:
 features:
   - icon: 🔄
     title: Upstream-First
-    details: Sincronización continua de quattro y rebase desatendido de personal a las 04:00 AM con escudo de conflictos.
+    details: Fetch de omacom:quattro, Fast-Forward del espejo local upstream y rebase desatendido de personal a las 04:00 AM con escudo de conflictos.
   - icon: 📦
     title: Sombreado pkgrel 99
     details: Entrega universal vía pacman y omarchy update sin scripts dispersos por máquina ni drift de dotfiles.

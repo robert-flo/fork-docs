@@ -33,15 +33,15 @@ Este proyecto implementa una **Tercera Vía**: tratar las personalizaciones como
 
 ```mermaid
 graph LR
-    Upstream["omacom/omarchy:quattro"] -->|Fast-Forward Diario 04:00 AM| Quattro["Fork: rama quattro"]
-    Quattro -->|git rebase automático| Personal["Fork: rama personal"]
+    Upstream["omacom/omarchy:quattro"] -->|Fast-Forward Diario 04:00 AM| Mirror["Fork: rama upstream (espejo FF)"]
+    Mirror -->|git rebase automático| Personal["Fork: rama personal (default)"]
     Personal -->|CI/CD Docker Build| Packages["omarchy & omarchy-settings pkgrel=99"]
     Packages -->|GitHub Pages CDN| UserMachine["Máquina Cliente: omarchy update"]
 ```
 
 ### Principios Fundamentales:
 
-* **100% Upstream-Aligned:** El upstream es la fuente de la verdad para el núcleo del sistema. Nuestra rama `quattro` es un espejo exacto 1:1 de `omacom/omarchy:quattro`. Nuestras personalizaciones viven en la punta de la historia git dentro de la rama `personal`.
+* **100% Upstream-Aligned:** El upstream es la fuente de la verdad para el núcleo del sistema. omacom publica en la rama **`quattro`**; nuestro fork mantiene un espejo Fast-Forward 1:1 llamado **`upstream`** (el fetch sigue viniendo de `omacom/omarchy:quattro`; solo cambió el nombre del espejo local, ADR 0024). Nuestras personalizaciones viven en la punta de la historia git dentro de la rama `personal`, que es la rama por defecto de GitHub.
 * **Sombreado Parcial sin Fricción:** No recompilamos toda la distribución. Únicamente generamos versiones sombreadas del par fundamental (`omarchy` y `omarchy-settings`) con `pkgrel=99`. Pacman reconoce automáticamente nuestros paquetes como más recientes y los instala sin romper la compatibilidad con el resto del sistema Arch Linux.
 * **Cero Configuración Manual por Máquina:** Para dar de alta una nueva laptop o desktop, basta con agregar el repositorio pacman y la llave GPG. De ahí en adelante, cada invocación de `omarchy update` descarga paquetes firmados, siembra configuraciones en `/etc/skel` y ejecuta migraciones idempotentes.
 * **Automatización Desatendida (*Zero-Touch*):** Diariamente a las 04:00 AM, un pipeline automatizado detecta nuevas versiones de Omarchy, actualiza las ramas, compila en contenedores Docker limpios y publica los paquetes. Si ocurre algún conflicto de código, el sistema se detiene de forma segura y abre un issue de alerta con instrucciones de resolución.
