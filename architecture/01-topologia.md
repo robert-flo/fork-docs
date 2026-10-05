@@ -19,8 +19,8 @@ graph TD
     end
 
     subgraph Core ["1. Código Fuente: robert-flo/omarchy"]
-        Q["rama quattro: espejo 1:1"]
-        P["rama personal: customizaciones"]
+        Q["rama upstream: espejo FF de omacom:quattro"]
+        P["rama personal: customizaciones (default)"]
     end
 
     subgraph Factory ["2. Fábrica de Compilación: robert-flo/omarchy-pkgs"]
@@ -54,8 +54,8 @@ graph TD
 ### Pilar 1: Repositorio de Código Fuente (`robert-flo/omarchy`)
 * **Propósito:** Contener el árbol de código fuente del sistema (scripts en `bin/`, configuraciones en `config/`, aplicaciones en `applications/`, recetas en `install/` y migraciones en `migrations/`).
 * **Ramas Canónicas:**
-  * **`quattro`:** Espejo 1:1 de la rama `omacom/omarchy:quattro`. Se actualiza exclusivamente por *Fast-Forward* para garantizar que nunca diverja ni genere commits sintéticos.
-  * **`personal`:** Rama activa donde residen las personalizaciones. Vive siempre rebaseada sobre la punta de `quattro`.
+  * **`upstream`:** Espejo 1:1 en el fork de la rama **`omacom/omarchy:quattro`**. El fetch sigue viniendo de esa rama de omacom (ellos no la renombraron). En `robert-flo/omarchy` el espejo se llama `upstream` (antes `quattro` local; ADR 0024) y se actualiza exclusivamente por *Fast-Forward* para garantizar que nunca diverga ni genere commits sintéticos.
+  * **`personal`:** Rama activa y **rama por defecto de GitHub** donde residen las personalizaciones. Vive siempre rebaseada sobre la punta de `upstream`.
 * **Seguridad:** Autoriza la clave SSH Deploy Key `omarchy-source-sync` con permisos de escritura para permitir que la fábrica de empaquetado actualice las ramas de forma desatendida.
 
 ### Pilar 2: Fábrica de Compilación (`robert-flo/omarchy-pkgs`)

@@ -33,6 +33,15 @@ Este documento unifica y centraliza el registro histórico de cambios, hitos de 
 
 ---
 
+## [2026-10-05] — Espejo local `upstream` (ADR 0024)
+
+* **Terminología del fork:** En `robert-flo/omarchy` el espejo Fast-Forward deja de llamarse `quattro` y pasa a llamarse `upstream`. **omacom sigue publicando en la rama `quattro`**; el fetch diario no cambió de origen, solo el nombre del espejo en nuestro fork.
+* **Default de GitHub:** `personal` permanece como rama larga de personalizaciones y es la rama por defecto del repositorio.
+* **Docs:** Glosario, topología, cadencia, ADR-008 y guía de introducción distinguen `omacom/omarchy:quattro` del espejo local `upstream`.
+* Refs: [robert-flo/omarchy#4](https://github.com/robert-flo/omarchy/issues/4) / ADR 0024.
+
+---
+
 ## [2026-09-30] — Cadencia Desatendida, Rotación GPG y Portal Canónico
 
 ### 1. Desacoplamiento Documental y Portal Web (`fork-docs`)
@@ -42,7 +51,7 @@ Este documento unifica y centraliza el registro histórico de cambios, hitos de 
 ### 2. Automatización Desatendida de las 04:00 AM & Sincronización Upstream
 * **Workflows Cruzados:**
   * Configurada deploy key SSH `omarchy-source-sync` en `robert-flo/omarchy` y secreto `SSH_OMARCHY_SOURCE_KEY` en `robert-flo/omarchy-pkgs`.
-  * Integrado paso en `release-personal.yml` que ejecuta Fast-Forward de `quattro` directo a `upstream/quattro` y rebase automático de `personal` sobre `quattro`.
+  * Integrado paso en `release-personal.yml` que ejecuta Fast-Forward del espejo local (entonces llamado `quattro` en el fork) hacia `omacom/omarchy:quattro` (ref de seguimiento `upstream/quattro` del *remote* omacom) y rebase automático de `personal` sobre ese espejo. omacom no cambió el nombre de su rama; el espejo local se renombró a `upstream` el 2026-10-05 (ADR 0024).
   * Creado workflow manual [`.github/workflows/sync-upstream.yml`](https://github.com/robert-flo/omarchy/blob/personal/.github/workflows/sync-upstream.yml) en el repositorio de código fuente.
 * **Escudo ante Conflictos:** Detección de colisiones durante el rebase, aborto seguro con `git rebase --abort`, detención del pipeline de compilación y apertura de issue de alerta detallada con guía de resolución manual.
 * **Ciclo Automático de Issues:** Apertura de issue de seguimiento al detectar nuevo tag en `sync-check.yml` y auto-cierre tras confirmar respuesta HTTP 200 en GitHub Pages.

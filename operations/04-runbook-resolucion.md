@@ -27,10 +27,12 @@ Upstream (`omacom/omarchy`) modificó una o más líneas de código en un archiv
    ```
 
 2. **Obtén las ramas más recientes y reproduce el rebase:**
+   El *remote* git `upstream` apunta a omacom (su rama sigue llamándose `quattro`). El espejo Fast-Forward en `robert-flo/omarchy` se llama `upstream` (ADR 0024).
    ```bash
-   git fetch upstream
+   git fetch upstream quattro --tags
+   git checkout -B upstream upstream/quattro
    git checkout personal
-   git rebase upstream/quattro
+   git rebase upstream
    ```
 
 3. **Inspecciona los archivos en conflicto:**

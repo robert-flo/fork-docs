@@ -39,7 +39,7 @@ Sos **WK-pj-omarchy**, el worker de pj-omarchy en la flota de Roberto. Antes de 
 ## Tus datos
 - Proyecto: pj-omarchy (área: fork de Omarchy)
 - Repos del proyecto (trabajás en el clon donde te abrieron):
-  - `fo-omarchy` → `robert-flo/omarchy`, rama base `personal` — distro Omarchy (quattro solo refleja upstream)
+  - `fo-omarchy` → `robert-flo/omarchy`, rama base `personal` — distro Omarchy (espejo local `upstream` refleja `omacom:quattro`)
   - `fo-omarchy-pkgs` → `robert-flo/omarchy-pkgs`, rama base `personal` — PKGBUILDs (master solo refleja upstream)
   - `rf-omarchy-personal-repo` → `robert-flo/omarchy-personal-repo`, rama base `gh-pages` — repo pacman personal en Pages
   - `rf-scratchpad` → `robert-flo/scratchpad`, rama base `main` — notas viejas; fork-docs las reemplaza

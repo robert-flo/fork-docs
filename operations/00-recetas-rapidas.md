@@ -22,7 +22,7 @@ description: "Índice de referencia rápida: qué hacer para cada tipo de cambio
 | **W6** — Paquetes del sistema | Lista en `install/*.packages` | `install/` | `omarchy reinstall pkgs` | `omarchy update` |
 | **W7** — Publicar al CDN | Dispatch del workflow CI/CD | `omarchy-pkgs` | `gh workflow run ... -f dry_run=true` | automático tras el push |
 | **W8** — Onboarding de máquina nueva | Script de bootstrap o 7 pasos manuales | — | ver [Onboarding](/fork-docs/guide/02-onboarding-maquinas/) | — |
-| **W9** — Cadencia / sync con upstream | Rebase de `personal` sobre `quattro` | `robert-flo/omarchy` | dispatch con nuevo `pkgver` | `omarchy update` |
+| **W9** — Cadencia / sync con upstream | Rebase de `personal` sobre el espejo local `upstream` (fetch desde `omacom:quattro`) | `robert-flo/omarchy` | dispatch con nuevo `pkgver` | `omarchy update` |
 | **W10** — Migración de usuarios existentes | Script en `migrations/<ts>.sh` | `migrations/` | `omarchy dev pkg-test` + ejecutar migración local | `omarchy update` (automático) |
 
 ---
@@ -200,7 +200,7 @@ curl -fsSL https://raw.githubusercontent.com/robert-flo/fork-docs/main/scripts/b
 
 ## W9 — Cadencia / Sync con upstream (nuevo release de Omarchy)
 
-**Cuándo:** `omacom/omarchy` publicó un nuevo tag (`vX.Y.Z`) y quieres actualizar el fork para mantener las personalizaciones sobre la versión más nueva.
+**Cuándo:** `omacom/omarchy` publicó un nuevo tag (`vX.Y.Z`) y quieres actualizar el fork para mantener las personalizaciones sobre la versión más nueva. El fetch sigue viniendo de `omacom/omarchy:quattro`; el espejo local en el fork es la rama `upstream`.
 
 ```bash
 # Si el pipeline de las 04:00 AM ya lo detectó y no hubo conflictos,
@@ -209,9 +209,10 @@ gh issue list --label cadencia -R robert-flo/omarchy-pkgs
 
 # Si hay conflicto (issue de alerta abierto) o quieres sincronizar manualmente:
 cd ~/Work/omarchy/omarchy-installer   # rama personal
-git fetch upstream
+git fetch upstream quattro --tags     # remote `upstream` = omacom; rama `quattro` en omacom
+git checkout -B upstream upstream/quattro   # Fast-Forward del espejo local
 git checkout personal
-git rebase upstream/quattro           # resolver conflictos si los hay
+git rebase upstream                   # rebase sobre el espejo; resolver conflictos si los hay
 git push --force-with-lease origin personal
 
 # Publicar con el nuevo pkgver (pkgrel se deriva: pkgver nuevo → 99)
