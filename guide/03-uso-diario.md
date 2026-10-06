@@ -53,8 +53,8 @@ graph TD
 Una duda recurrente al gestionar sistemas con paquetes es: *¿por qué al actualizar un paquete no siempre se sobrescribe mi archivo en `$HOME/.config/`?*
 
 Esto es una decisión deliberada de seguridad del diseño de Arch Linux y Omarchy:
-* **Usuarios nuevos:** Al crearse un usuario, el sistema copia `/etc/skel` sobre `$HOME`. Por tanto, los usuarios nuevos nacen automáticamente con la última configuración personal.
-* **Usuarios existentes:** Para proteger los ajustes que el usuario haya modificado manualmente en su máquina local, `pacman` no destruye archivos de `$HOME`. 
+* **Usuarios nuevos:** Al crearse un usuario, el sistema copia `/etc/skel` sobre `$HOME`. Por tanto, los usuarios nuevos nacen automáticamente con la última configuración personal. Sembrar `/etc/skel` cubre ese home, el que todavía no existe.
+* **Usuarios existentes:** `omarchy update` no vuelve a copiar el skel sobre un `$HOME` que ya existe (pc-gracie o una PC hija). El cambio aplica solo cuando el paquete trae una migración idempotente y `omarchy update` la ejecuta. Sin esa migración, la edición no está hecha. `omarchy-reinstall-configs` copia todo el skel encima del home y no es el camino de la flota. La regla, con el ejemplo de `default/bash/rc`, `default/bashrc` y `~/.local/bin/agy`, está en [Introducción & Filosofía](/fork-docs/guide/01-introduccion/#migracion-home-existente) y el script se agrega en [W10](/fork-docs/operations/00-recetas-rapidas/#w10). 
 
 Para aplicar cambios a usuarios existentes, existen dos vías según el escenario:
 

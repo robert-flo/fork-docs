@@ -115,8 +115,8 @@ vim config/kitty/kitty.conf
 omarchy dev pkg-test
 omarchy refresh config kitty/kitty.conf   # aplica en ~/.config/ del usuario actual
 
-# 3. Si el cambio debe materializarse en ~/ de usuarios EXISTENTES en otras máquinas,
-#    considera también una migración (W10) para que sea automático.
+# 3. Si el cambio debe verse en el $HOME de máquinas que ya existen,
+#    hace falta una migración (W10). Sin ella, la edición no está hecha.
 
 # 4. Publica (W7)
 gh workflow run release-personal.yml -R robert-flo/omarchy-pkgs \
@@ -232,9 +232,13 @@ Checklist post-sync:
 
 ---
 
+<a id="w10"></a>
+
 ## W10 — Agregar una migración para usuarios existentes
 
 **Cuándo:** Tienes un cambio que afecta el `$HOME` de usuarios ya existentes en máquinas ya onboardeadas, y quieres que se aplique automáticamente en el próximo `omarchy update` de cada máquina.
+
+> **Sin migración, la edición no está hecha.** Sembrar `/etc/skel` cubre un home que todavía no existe. En pc-gracie o en una PC hija, `omarchy update` no vuelve a copiar el skel sobre el home: el cambio aplica solo si el paquete trae una migración idempotente y `omarchy update` la corre. `default/bash/rc` se carga desde `/usr`, así que un shell nuevo lo ve al instalar el paquete. El stub `default/bashrc` solo actualiza `/etc/skel/.bashrc`; un `~/.bashrc` existente cambia únicamente si una migración lo copia. `~/.local/bin/agy` lo genera `omarchy-mise-install` (paquete `omarchy`): el update instala el generador y no reescribe un wrapper que ya existe; eso también necesita migración. `omarchy-reinstall-configs` copia todo el skel encima del home y no es el camino de la flota. La regla vive junto al principio de cero configuración, en [Introducción & Filosofía](/fork-docs/guide/01-introduccion/#migracion-home-existente).
 
 ```bash
 # 1. Crea el script de migración con timestamp (idempotente obligatorio)
