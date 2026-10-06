@@ -26,6 +26,8 @@
       url: /architecture/04-cadencia-automatica/
     - title: "5. Modelo de Seguridad GPG"
       url: /architecture/05-modelo-seguridad-gpg/
+    - title: "6. Subsistema de Hooks"
+      url: /architecture/06-subsistema-hooks/
   docs:
     - title: "1. Topología del Ecosistema"
       url: /architecture/01-topologia/
@@ -37,6 +39,8 @@
       url: /architecture/04-cadencia-automatica/
     - title: "5. Modelo de Seguridad GPG"
       url: /architecture/05-modelo-seguridad-gpg/
+    - title: "6. Subsistema de Hooks"
+      url: /architecture/06-subsistema-hooks/
 
 - title: "Mantenimiento & Operaciones"
   items:
@@ -52,6 +56,8 @@
       url: /operations/04-runbook-resolucion/
     - title: "5. Espacios Herdr de la flota"
       url: /operations/05-espacios-herdr/
+    - title: "6. Añadir Configuración de App"
+      url: /operations/06-anadir-config-app/
   docs:
     - title: "Recetas Rápidas (W1–W10)"
       url: /operations/00-recetas-rapidas/
@@ -65,6 +71,8 @@
       url: /operations/04-runbook-resolucion/
     - title: "5. Espacios Herdr de la flota"
       url: /operations/05-espacios-herdr/
+    - title: "6. Añadir Configuración de App"
+      url: /operations/06-anadir-config-app/
 
 - title: "Decisiones Arquitectónicas (ADRs)"
   items:
@@ -114,10 +122,14 @@
   items:
     - title: "Glosario de Términos"
       url: /reference/glosario/
+    - title: "Comandos y Archivos Clave"
+      url: /reference/comandos-y-archivos-clave/
     - title: "Historial de Cambios Consolidado"
       url: /reference/historial-cambios/
   docs:
     - title: "Glosario de Términos"
       url: /reference/glosario/
+    - title: "Comandos y Archivos Clave"
+      url: /reference/comandos-y-archivos-clave/
     - title: "Historial de Cambios Consolidado"
       url: /reference/historial-cambios/
