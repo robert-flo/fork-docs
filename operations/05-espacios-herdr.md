@@ -8,7 +8,7 @@ description: "How-to del 2026-10-05: los mismos espacios de Herdr en DEV y en la
 
 Caso del **2026-10-05**. Las máquinas del fork deben abrir los mismos espacios de Herdr, uno por directorio de `~/Work/tries`, y en cada espacio las pestañas `agy`, `elio` y `nvim`.
 
-El código quedó en `personal` con [robert-flo/omarchy#7](https://github.com/robert-flo/omarchy/pull/7). Este how-to es el procedimiento. No sustituye a [W4](/fork-docs/operations/00-recetas-rapidas/), [W6](/fork-docs/operations/00-recetas-rapidas/#w6), [W7](/fork-docs/operations/00-recetas-rapidas/) ni [W10](/fork-docs/operations/00-recetas-rapidas/): los combina. `elio-bin` sigue [W6](/fork-docs/operations/00-recetas-rapidas/#w6).
+El código quedó en `personal` con [robert-flo/omarchy#7](https://github.com/robert-flo/omarchy/pull/7). Este how-to es el procedimiento de los espacios. No sustituye a [W4](/fork-docs/operations/00-recetas-rapidas/), [W6](/fork-docs/operations/00-recetas-rapidas/#w6) ni [W7](/fork-docs/operations/00-recetas-rapidas/): los combina. `elio-bin` sigue [W6](/fork-docs/operations/00-recetas-rapidas/#w6). `migrations/1791260741.sh` es precedente; no es parte de este procedimiento.
 
 ---
 
@@ -75,4 +75,4 @@ omarchy update
 omarchy refresh herdr
 ```
 
-`omarchy update` instala los paquetes sombreados y corre `omarchy-pkg-sync`: `--repos` después de los paquetes del sistema, con sudo todavía autorizado; `--aur` en la fase fría, sin cachear sudo. Así entra `elio-bin` si falta. No copia la sesión a `~/.config`. Los espacios los arma el refresh.
+`omarchy update` instala los paquetes sombreados. `elio-bin`, si falta, entra por [W6](/fork-docs/operations/00-recetas-rapidas/#w6). No copia la sesión a `~/.config`. Los espacios los arma el refresh.

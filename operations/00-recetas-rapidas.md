@@ -23,7 +23,7 @@ description: "Índice de referencia rápida: qué hacer para cada tipo de cambio
 | **W3** — Wrapper de terceros (CLI, mise) | Instalador en `install/user/*.sh` | `install/user/` | `omarchy refresh-applications` | `omarchy update` |
 | **W4** — Config de aplicación (`~/.config/`) | Según los 4 caminos (ver [Guía](/fork-docs/operations/06-anadir-config-app/)) | `etc/xdg/` o `default/` | `omarchy dev link` / `pkg-test` | `omarchy update` |
 | **W5** — Tema | Archivos en `themes/` | `themes/` | `omarchy dev pkg-test` + `omarchy refresh theme` | `omarchy update` |
-| **W6** — Paquete de Arch o del AUR | `install/omarchy-base.packages` o `install/omarchy-aur.packages` | `install/` | `omarchy dev pkg-test` | `omarchy update` |
+| **W6** — Paquete de Arch o del AUR | `install/omarchy-base.packages` o `install/omarchy-aur.packages` | `install/` | `omarchy dev pkg-test` en gracie (no `omarchy update`) | `omarchy update` en las hijas |
 | **W7** — Publicar al CDN | Dispatch del workflow CI/CD | `omarchy-pkgs` | `gh workflow run ... -f dry_run=true` | automático tras el push |
 | **W8** — Onboarding de máquina nueva | Script de bootstrap o 7 pasos manuales | — | ver [Onboarding](/fork-docs/guide/02-onboarding-maquinas/) | — |
 | **W9** — Cadencia / sync con upstream | Rebase de `personal` sobre el espejo local `upstream` (fetch desde `omacom:quattro`) | `robert-flo/omarchy` | dispatch con nuevo `pkgver` | `omarchy update` |
@@ -175,12 +175,18 @@ No hagas esto:
 ```bash
 # 1. Una línea en la lista que corresponde (Arch o AUR, ver arriba)
 
-# 2. Desde el checkout de fo-omarchy. Para ver que instala de verdad:
-#    desinstalar, pkg-test, pacman -Q. meld es el ejemplo de Arch; elio-bin, el del AUR.
+# 2. Desde el checkout de fo-omarchy. Corre la secuencia del paquete que agregaste.
 cd ~/Work/omarchy/omarchy-installer
+
+# Arch. Ejemplo: meld
 sudo pacman -Rns --noconfirm meld
 omarchy dev pkg-test
 pacman -Q meld
+
+# AUR. Ejemplo: elio-bin
+sudo pacman -Rns --noconfirm elio-bin
+omarchy dev pkg-test
+pacman -Q elio-bin
 
 # 3. Publica (W7). En las hijas, omarchy update.
 gh workflow run release-personal.yml -R robert-flo/omarchy-pkgs \
