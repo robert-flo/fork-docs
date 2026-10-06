@@ -262,9 +262,10 @@ echo "Migration ${TIMESTAMP}_mi-migracion: done"
 EOF
 chmod +x migrations/${TIMESTAMP}_mi-migracion.sh
 
-# 2. Valida localmente
+# 2. Valida localmente con el flujo integral (Operations/01 §5):
 omarchy dev pkg-test
-bash migrations/${TIMESTAMP}_mi-migracion.sh   # prueba la migración
+omarchy-migrate                              # ejecuta scripts pendientes en migrations/
+omarchy refresh <componente>                 # recarga el componente afectado en caliente
 
 # 3. Publica (W7) — en el próximo omarchy update de cada máquina,
 #    omarchy-migrate ejecutará este script automáticamente
