@@ -8,6 +8,8 @@ description: "Índice de referencia rápida: qué hacer para cada tipo de cambio
 
 > **Puerta obligatoria.** Antes de tocar cualquier archivo del fork, identifica en qué receta encaja tu cambio. Si no encaja en ninguna, es señal de que debes re-preguntar — el modelo upstream es la única verdad (ver [Matriz de Decisión](/fork-docs/architecture/02-matriz-de-decision/)).
 
+> **Referencia Técnica Central:** Para una descripción exhaustiva de los comandos de desarrollo, motores de migración y documentos maestros del árbol de Omarchy, consulta la [Referencia Canónica de Comandos y Archivos Clave](/fork-docs/reference/comandos-y-archivos-clave/).
+
 > **Caso 2026-10-05 — espacios Herdr.** No se publica `session.json` ni se aplica el home con `omarchy-reinstall-configs`. El procedimiento está en [Espacios Herdr de la flota](/fork-docs/operations/05-espacios-herdr/).
 
 ---
@@ -19,7 +21,7 @@ description: "Índice de referencia rápida: qué hacer para cada tipo de cambio
 | **W1** — Webapp o launcher | Archivo `.desktop` + icono | `applications/` | `omarchy dev pkg-test` + `omarchy refresh-applications` | `omarchy update` |
 | **W2** — Comando / ejecutable propio | Script `omarchy-*` | `bin/omarchy-*` | `omarchy dev pkg-test` | `omarchy update` |
 | **W3** — Wrapper de terceros (CLI, mise) | Instalador en `install/user/*.sh` | `install/user/` | `omarchy refresh-applications` | `omarchy update` |
-| **W4** — Config de usuario | Archivo en `config/<app>/` | `config/` | `omarchy dev pkg-test` + `omarchy refresh config <archivo>` | `omarchy update` |
+| **W4** — Config de aplicación (`~/.config/`) | Según los 4 caminos (ver [Guía](/fork-docs/operations/06-anadir-config-app/)) | `etc/xdg/` o `default/` | `omarchy dev link` / `pkg-test` | `omarchy update` |
 | **W5** — Tema | Archivos en `themes/` | `themes/` | `omarchy dev pkg-test` + `omarchy refresh theme` | `omarchy update` |
 | **W6** — Paquetes del sistema | Lista en `install/*.packages` | `install/` | `omarchy reinstall pkgs` | `omarchy update` |
 | **W7** — Publicar al CDN | Dispatch del workflow CI/CD | `omarchy-pkgs` | `gh workflow run ... -f dry_run=true` | automático tras el push |
@@ -103,23 +105,27 @@ gh workflow run release-personal.yml -R robert-flo/omarchy-pkgs \
 
 ---
 
-## W4 — Modificar una config de usuario (kitty, foot, hypr, shell…)
+## W4 — Añadir o modificar una config de app (`~/.config/`)
 
-**Cuándo:** Quieres cambiar un archivo de configuración que vive en `~/.config/`.
+**Cuándo:** Quieres integrar una nueva aplicación o modificar una configuración existente en `~/.config/`.
+
+> **Procedimiento Canónico Obligatorio:** Consulta la [Guía Operativa: Añadir Configuraciones de App a la Flota](/fork-docs/operations/06-anadir-config-app/) para evaluar los 4 caminos según las capacidades de la app (Sistema `/etc/xdg/`, Stub + Include, Symlink gestionado, Semilla estática + Reconciliador).
 
 ```bash
-# 1. Edita el archivo en el fork
-vim config/kitty/kitty.conf
+# 1. Evalúa el camino en operations/06-anadir-config-app/
+#    - Camino 1: etc/xdg/<app>/
+#    - Camino 2: default/<app>/ (core) + stub
+#    - Camino 3: default/<app>/ + symlink en aprovisionamiento
+#    - Camino 4: default/<app>/ a /etc/skel/ + hooks/post-update.d/
 
-# 2. Valida localmente
-omarchy dev pkg-test
-omarchy refresh config kitty/kitty.conf   # aplica en ~/.config/ del usuario actual
+# 2. Valida localmente con el flujo de doble velocidad
+omarchy dev link ~/Work/tries/pj-omarchy/fo-omarchy
+omarchy refresh config <app>/config
 
-# 3. El día a día no pide una migración por cada edición. Si el home ya
-#    lee el archivo desde /usr, el paquete basta. W10 es solo el puente
-#    de una vez, cuando el home todavía no tiene el stub.
+# 3. Validación pre-flight (obligatoria para /etc/xdg o /etc/skel)
+omarchy dev pkg-test omarchy-settings-dev
 
-# 4. Publica (W7)
+# 4. Publica cuando esté validado (W7)
 gh workflow run release-personal.yml -R robert-flo/omarchy-pkgs \
   --ref personal -f version=v<TAG>
 ```
