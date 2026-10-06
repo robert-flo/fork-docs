@@ -33,6 +33,15 @@ Este documento unifica y centraliza el registro histórico de cambios, hitos de 
 
 ---
 
+## [2026-10-05] — Espacios Herdr de la flota
+
+* **Código:** [robert-flo/omarchy#7](https://github.com/robert-flo/omarchy/pull/7) en `personal`. Aún no hay republicación: el par lockstep de esta tabla sigue en `4.0.4-99` hasta un `release-personal.yml`.
+* **Mecanismo:** `default/herdr/spaces` más `omarchy-herdr-seed-spaces`. `omarchy refresh herdr` refresca `config.toml` y, con Herdr abierto, siembra los espacios. `elio-bin` entra por la migración `1791260741.sh` (`omarchy-pkg-aur-add`), no por `omarchy-base.packages`.
+* **Qué quedó descartado:** publicar `session.json`, y aplicar dotfiles de máquinas existentes con `omarchy-reinstall-configs` / `/etc/skel`.
+* **How-to:** [Espacios Herdr de la flota](/fork-docs/operations/05-espacios-herdr/).
+
+---
+
 ## [2026-10-05] — Espejo local `upstream` (ADR 0024)
 
 * **Terminología del fork:** En `robert-flo/omarchy` el espejo Fast-Forward deja de llamarse `quattro` y pasa a llamarse `upstream`. **omacom sigue publicando en la rama `quattro`**; el fetch diario no cambió de origen, solo el nombre del espejo en nuestro fork.

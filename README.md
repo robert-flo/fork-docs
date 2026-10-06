@@ -20,7 +20,7 @@ Este portal es el **Estándar de Oro y la Fuente Única de la Verdad** del proye
 
 * **[Guía de Usuario](https://robert-flo.github.io/fork-docs/guide/01-introduccion/):** Filosofía del proyecto, onboarding desatendido en 3 comandos y uso diario.
 * **[Arquitectura](https://robert-flo.github.io/fork-docs/architecture/01-topologia/):** Topología de los 4 repositorios, Matriz de Decisión estricta, sombreado `pkgrel=99`, pipeline de las 04:00 AM y modelo de seguridad GPG.
-* **[Operaciones](https://robert-flo.github.io/fork-docs/operations/01-flujo-desarrollo/):** Ciclo de desarrollo `pkg-test`, creación de paquetes con `"personal": true`, rotación de claves GPG (ADR-006 DR) y runbook de contingencias.
+* **[Operaciones](https://robert-flo.github.io/fork-docs/operations/01-flujo-desarrollo/):** Ciclo de desarrollo `pkg-test`, creación de paquetes con `"personal": true`, rotación de claves GPG (ADR-006 DR), runbook de contingencias y el how-to de espacios Herdr.
 * **[ADRs](https://robert-flo.github.io/fork-docs/adrs/):** Colección formal de los 9 Architecture Decision Records (ADR-001 al ADR-009).
 * **[Referencia](https://robert-flo.github.io/fork-docs/reference/glosario/):** Glosario de términos canónicos y registro cronológico consolidado de cambios.
 

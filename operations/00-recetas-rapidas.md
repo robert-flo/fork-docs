@@ -8,6 +8,8 @@ description: "Índice de referencia rápida: qué hacer para cada tipo de cambio
 
 > **Puerta obligatoria.** Antes de tocar cualquier archivo del fork, identifica en qué receta encaja tu cambio. Si no encaja en ninguna, es señal de que debes re-preguntar — el modelo upstream es la única verdad (ver [Matriz de Decisión](/fork-docs/architecture/02-matriz-de-decision/)).
 
+> **Caso 2026-10-05 — espacios Herdr.** No se publica `session.json` ni se aplica el home con `omarchy-reinstall-configs`. El procedimiento está en [Espacios Herdr de la flota](/fork-docs/operations/05-espacios-herdr/).
+
 ---
 
 ## Índice de recetas

@@ -50,6 +50,8 @@
       url: /operations/03-rotacion-claves/
     - title: "4. Runbook de Contingencias"
       url: /operations/04-runbook-resolucion/
+    - title: "5. Espacios Herdr de la flota"
+      url: /operations/05-espacios-herdr/
   docs:
     - title: "Recetas Rápidas (W1–W10)"
       url: /operations/00-recetas-rapidas/
@@ -61,6 +63,8 @@
       url: /operations/03-rotacion-claves/
     - title: "4. Runbook de Contingencias"
       url: /operations/04-runbook-resolucion/
+    - title: "5. Espacios Herdr de la flota"
+      url: /operations/05-espacios-herdr/
 
 - title: "Decisiones Arquitectónicas (ADRs)"
   items:

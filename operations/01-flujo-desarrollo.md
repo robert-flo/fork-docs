@@ -54,6 +54,10 @@ omarchy refresh-applications
 
 # Si modificaste la barra o el gestor de ventanas:
 omarchy refresh hyprland
+
+# Herdr: baja config.toml y, si Herdr está abierto, siembra los espacios de la flota.
+# Procedimiento: operations/05-espacios-herdr/
+omarchy refresh herdr
 ```
 
 ### Paso 4: Validar

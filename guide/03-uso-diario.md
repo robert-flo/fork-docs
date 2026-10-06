@@ -62,6 +62,7 @@ Para aplicar cambios a usuarios existentes, existen dos vías según el escenari
 | :--- | :--- | :--- |
 | **Distribución a todas las máquinas** | **Migración (`migrations/*.sh`)** | Cuando queremos que el próximo `omarchy update` aplique el cambio automáticamente en todas las computadoras. |
 | **Pruebas inmediatas en tu máquina** | **Refresh manual** | Cuando estás probando cambios localmente y deseas forzar la actualización inmediata. |
+| **Espacios Herdr** | **`omarchy refresh herdr` con Herdr abierto** | El update instala el comando y la migración de `elio-bin`. Los espacios se arman al refrescar. Ver [Espacios Herdr de la flota](/fork-docs/operations/05-espacios-herdr/). |
 
 ### Comandos de Refresh Manual
 
@@ -69,6 +70,7 @@ Para aplicar cambios a usuarios existentes, existen dos vías según el escenari
 # Refresca un archivo de configuración específico desde la fuente instalada
 omarchy refresh config kitty/kitty.conf
 omarchy refresh config hypr/hyprland.conf
+omarchy refresh herdr
 
 # Refresca las aplicaciones de escritorio y wrappers de ~/local/bin
 omarchy refresh-applications
