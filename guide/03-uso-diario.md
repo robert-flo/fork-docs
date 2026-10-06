@@ -41,7 +41,7 @@ graph TD
    Consulta los repositorios configurados. Al encontrar nuestros paquetes en `omarchy-personal-repo` con versión sombreada (`pkgrel=99`), pacman los descarga y los instala sobre los oficiales. Esto coloca los archivos actualizados en `/usr/bin/`, `/usr/share/omarchy/` y `/etc/skel/`.
 
 2. **`omarchy-migrate`:**  
-   Examina el directorio `/usr/share/omarchy/migrations/`. Si el paquete incluye una nueva migración con marca de tiempo que aún no se ha registrado en `~/.config/omarchy/migrations.applied`, la ejecuta en el contexto del usuario. Todas las migraciones se diseñan de manera estrictamente idempotente.
+   Examina el directorio `/usr/share/omarchy/migrations/`. Si el paquete incluye una migración con marca de tiempo que aún no está en `~/.local/state/omarchy/migrations/`, la ejecuta en el contexto del usuario y deja ahí la marca con el nombre del archivo. Con la marca puesta, `omarchy-migrate` no la vuelve a correr. No se edita una migración que alguna máquina ya pueda haber marcado: el siguiente cambio a un `$HOME` existente viaja en un archivo nuevo. Todas las migraciones se diseñan de manera estrictamente idempotente.
 
 3. **`omarchy-hook post-update`:**  
    Ejecuta las rutinas de cierre de actualización: regeneración de bases de datos de escritorio (`update-desktop-database`), refresco de iconos hicolor y reinicio suave de demonios dependientes si es requerido.
@@ -54,7 +54,7 @@ Una duda recurrente al gestionar sistemas con paquetes es: *¿por qué al actual
 
 Esto es una decisión deliberada de seguridad del diseño de Arch Linux y Omarchy:
 * **Usuarios nuevos:** Al crearse un usuario, el sistema copia `/etc/skel` sobre `$HOME`. Por tanto, los usuarios nuevos nacen automáticamente con la última configuración personal. Sembrar `/etc/skel` cubre ese home, el que todavía no existe.
-* **Usuarios existentes:** `omarchy update` no vuelve a copiar el skel sobre un `$HOME` que ya existe (pc-gracie o una PC hija). El cambio aplica solo cuando el paquete trae una migración idempotente y `omarchy update` la ejecuta. Sin esa migración, la edición no está hecha. `omarchy-reinstall-configs` copia todo el skel encima del home y no es el camino de la flota. La regla, con el ejemplo de `default/bash/rc`, `default/bashrc` y `~/.local/bin/agy`, está en [Introducción & Filosofía](/fork-docs/guide/01-introduccion/#migracion-home-existente) y el script se agrega en [W10](/fork-docs/operations/00-recetas-rapidas/#w10). 
+* **Usuarios existentes:** `omarchy update` no vuelve a copiar el skel sobre un `$HOME` que ya existe (pc-gracie o una PC hija). El cambio aplica solo cuando el paquete trae una migración idempotente y `omarchy update` la ejecuta. Sin esa migración, la edición no está hecha. Esa migración corre una sola vez. Hasta que la primera máquina ejecute `migrations/1791266899.sh`, el archivo copia el stub instalado en ese momento; después de la marca, un `default/bashrc` nuevo pide otra migración. Un cambio en `default/bash/rc` no la necesita, porque el stub carga `/usr/share/omarchy/default/bash/rc`. `omarchy-reinstall-configs` copia todo el skel encima del home y no es el camino de la flota. La regla completa está en [Introducción & Filosofía](/fork-docs/guide/01-introduccion/#migracion-home-existente) y el script se agrega en [W10](/fork-docs/operations/00-recetas-rapidas/#w10). 
 
 Para aplicar cambios a usuarios existentes, existen dos vías según el escenario:
 
