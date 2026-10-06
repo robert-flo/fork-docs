@@ -23,7 +23,7 @@ description: "Índice de referencia rápida: qué hacer para cada tipo de cambio
 | **W3** — Wrapper de terceros (CLI, mise) | Instalador en `install/user/*.sh` | `install/user/` | `omarchy refresh-applications` | `omarchy update` |
 | **W4** — Config de aplicación (`~/.config/`) | Según los 4 caminos (ver [Guía](/fork-docs/operations/06-anadir-config-app/)) | `etc/xdg/` o `default/` | `omarchy dev link` / `pkg-test` | `omarchy update` |
 | **W5** — Tema | Archivos en `themes/` | `themes/` | `omarchy dev pkg-test` + `omarchy refresh theme` | `omarchy update` |
-| **W6** — Paquetes del sistema | Lista en `install/*.packages` | `install/` | `omarchy reinstall pkgs` | `omarchy update` |
+| **W6** — Paquete de Arch o del AUR | `install/omarchy-base.packages` o `install/omarchy-aur.packages` | `install/` | `omarchy dev pkg-test` en gracie (no `omarchy update`) | `omarchy update` en las hijas |
 | **W7** — Publicar al CDN | Dispatch del workflow CI/CD | `omarchy-pkgs` | `gh workflow run ... -f dry_run=true` | automático tras el push |
 | **W8** — Onboarding de máquina nueva | Script de bootstrap o 7 pasos manuales | — | ver [Onboarding](/fork-docs/guide/02-onboarding-maquinas/) | — |
 | **W9** — Cadencia / sync con upstream | Rebase de `personal` sobre el espejo local `upstream` (fetch desde `omacom:quattro`) | `robert-flo/omarchy` | dispatch con nuevo `pkgver` | `omarchy update` |
@@ -151,21 +151,49 @@ gh workflow run release-personal.yml -R robert-flo/omarchy-pkgs \
 
 ---
 
-## W6 — Modificar el set de paquetes del sistema
+<a id="w6"></a>
 
-**Cuándo:** Quieres añadir o quitar un paquete de la lista de instalación base del fork.
+## W6 — Agregar un paquete de Arch o del AUR
+
+**Cuándo:** El paquete o la app ya existe en los repos de Arch o en el AUR. Un launcher de URL sigue siendo [W1](/fork-docs/operations/00-recetas-rapidas/). Un PKGBUILD propio del fork sigue siendo [Añadir un Paquete Personal](/fork-docs/operations/02-anadir-paquete/).
+
+El mecanismo vive en [robert-flo/omarchy#17](https://github.com/robert-flo/omarchy/pull/17) (issue [#16](https://github.com/robert-flo/omarchy/issues/16)) y todavía no está mergeado. Esta receta lo describe igual.
+
+Clasifica el origen antes de editar, en el checkout de `fo-omarchy`:
+
+- Está en los repos de Arch (`pacman -Ss`): una línea en `install/omarchy-base.packages`. Ejemplo: `meld`.
+- Es del AUR: una línea en `install/omarchy-aur.packages`. Ejemplo: `elio-bin`. Esa línea no va en `omarchy-base.packages`. `omarchy reinstall pkgs` y pacman no ven el AUR.
+- `install/omarchy-other.packages` no es esta receta. `omarchy-pkg-sync` no la lee.
+
+No hagas esto:
+
+- No crees una migración por paquete. Las migraciones quedan para un cambio de estado de una sola vez ([W10](/fork-docs/operations/00-recetas-rapidas/#w10)). `migrations/1791260741.sh` se queda; no es el camino para el próximo paquete del AUR.
+- No uses un hook `post-update` para instalar paquetes.
+
+**gracie** es la PC dev. No corre `omarchy update`. Desde el checkout de `fo-omarchy`, `omarchy dev pkg-test` termina llamando `omarchy-pkg-sync`, que instala solo lo que falta de las dos listas.
 
 ```bash
-# 1. Edita la lista de paquetes
-vim install/omarchy-base.packages   # o omarchy-other.packages
+# 1. Una línea en la lista que corresponde (Arch o AUR, ver arriba)
 
-# 2. Valida localmente (instala los paquetes faltantes con --needed)
-omarchy reinstall pkgs
+# 2. Desde el checkout de fo-omarchy. Corre la secuencia del paquete que agregaste.
+cd ~/Work/omarchy/omarchy-installer
 
-# 3. Publica (W7)
+# Arch. Ejemplo: meld
+sudo pacman -Rns --noconfirm meld
+omarchy dev pkg-test
+pacman -Q meld
+
+# AUR. Ejemplo: elio-bin
+sudo pacman -Rns --noconfirm elio-bin
+omarchy dev pkg-test
+pacman -Q elio-bin
+
+# 3. Publica (W7). En las hijas, omarchy update.
 gh workflow run release-personal.yml -R robert-flo/omarchy-pkgs \
   --ref personal -f version=v<TAG>
 ```
+
+En las hijas, después de esa publicación, `omarchy update` corre `omarchy-pkg-sync --repos` después de los paquetes del sistema, con sudo todavía autorizado, y `omarchy-pkg-sync --aur` en la fase fría, sin cachear sudo.
 
 ---
 

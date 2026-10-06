@@ -33,6 +33,15 @@ Este documento unifica y centraliza el registro histórico de cambios, hitos de 
 
 ---
 
+## [2026-10-06] — Paquetes de Arch y del AUR por lista
+
+* **Código:** [robert-flo/omarchy#17](https://github.com/robert-flo/omarchy/pull/17) (issue [#16](https://github.com/robert-flo/omarchy/issues/16)), todavía sin merge. El par lockstep de la tabla de arriba sigue en `4.0.4-99` hasta un `release-personal.yml`.
+* **Mecanismo:** un paquete de Arch es una línea en `install/omarchy-base.packages` (ejemplo `meld`). Uno del AUR es una línea en `install/omarchy-aur.packages` (ejemplo `elio-bin`); no va en la lista base. `omarchy-pkg-sync` instala solo lo que falta. En gracie el gatillo es `omarchy dev pkg-test`, no `omarchy update`. En las hijas, tras publicar (W7), `omarchy update` corre `--repos` con sudo todavía autorizado y `--aur` en la fase fría.
+* **Qué queda fuera:** `install/omarchy-other.packages` (`omarchy-pkg-sync` no la lee), un launcher web (W1), un PKGBUILD propio ([Añadir un Paquete Personal](/fork-docs/operations/02-anadir-paquete/)), una migración nueva y un hook `post-update`. `migrations/1791260741.sh` queda como precedente. La entrada del 2026-10-05 describe ese camino viejo y no se reescribe.
+* **Receta:** [W6](/fork-docs/operations/00-recetas-rapidas/#w6).
+
+---
+
 ## [2026-10-05] — Espacios Herdr de la flota
 
 * **Código:** [robert-flo/omarchy#7](https://github.com/robert-flo/omarchy/pull/7) en `personal`. Aún no hay republicación: el par lockstep de esta tabla sigue en `4.0.4-99` hasta un `release-personal.yml`.
