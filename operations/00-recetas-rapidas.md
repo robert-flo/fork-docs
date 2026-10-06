@@ -115,8 +115,9 @@ vim config/kitty/kitty.conf
 omarchy dev pkg-test
 omarchy refresh config kitty/kitty.conf   # aplica en ~/.config/ del usuario actual
 
-# 3. Si el cambio debe verse en el $HOME de máquinas que ya existen,
-#    hace falta una migración (W10). Sin ella, la edición no está hecha.
+# 3. El día a día no pide una migración por cada edición. Si el home ya
+#    lee el archivo desde /usr, el paquete basta. W10 es solo el puente
+#    de una vez, cuando el home todavía no tiene el stub.
 
 # 4. Publica (W7)
 gh workflow run release-personal.yml -R robert-flo/omarchy-pkgs \
@@ -236,9 +237,9 @@ Checklist post-sync:
 
 ## W10 — Agregar una migración para usuarios existentes
 
-**Cuándo:** Tienes un cambio que afecta el `$HOME` de usuarios ya existentes en máquinas ya onboardeadas, y quieres que se aplique automáticamente en el próximo `omarchy update` de cada máquina.
+**Cuándo:** El home existente todavía no tiene el stub, o hay que reemplazar una vez un archivo generado viejo. El día a día no entra aquí: va en el archivo que ese home ya lee desde `/usr`.
 
-> **Sin migración, la edición no está hecha.** Sembrar `/etc/skel` cubre un home que todavía no existe. En pc-gracie o en una PC hija, `omarchy update` no vuelve a copiar el skel sobre el home: el cambio aplica solo si el paquete trae una migración idempotente y `omarchy update` la corre. `default/bash/rc` se carga desde `/usr`, así que un shell nuevo lo ve al instalar el paquete. El stub `default/bashrc` solo actualiza `/etc/skel/.bashrc`; un `~/.bashrc` existente cambia únicamente si una migración lo copia. `~/.local/bin/agy` lo genera `omarchy-mise-install` (paquete `omarchy`): el update instala el generador y no reescribe un wrapper que ya existe; eso también necesita migración. `omarchy-reinstall-configs` copia todo el skel encima del home y no es el camino de la flota. Un archivo de migración corre una sola vez: cuando la PC lo marca en `~/.local/state/omarchy/migrations/`, `omarchy-migrate` no lo vuelve a ejecutar. No se edita una migración que alguna máquina ya pueda haber corrido. El siguiente cambio a un `$HOME` existente viaja en una migración nueva, con otro timestamp. Hasta que la primera máquina corra `migrations/1791266899.sh`, ese archivo copia el stub que esté instalado al ejecutarse, así que un cambio posterior de `default/bashrc` no necesita una segunda migración si el paquete nuevo llega antes. Cuando la marca ya existe, una migración nueva tiene que volver a copiar el stub. Un cambio en `default/bash/rc` no necesita migración: el stub carga `/usr/share/omarchy/default/bash/rc`. La regla vive junto al principio de cero configuración, en [Introducción & Filosofía](/fork-docs/guide/01-introduccion/#migracion-home-existente).
+> **La migración es solo el puente de una vez.** Sembrar `/etc/skel` cubre un home que todavía no existe. En pc-gracie o en una PC hija, `omarchy update` no vuelve a copiar el skel. El día a día no pide una migración por cada edición. `~/.bashrc` se queda como stub y carga `/usr/share/omarchy/default/bash/rc`. Los alias y las rutas de Android viven en `default/bash/rc`. Tras el update del paquete, un shell nuevo los ve. No hace falta una migración nueva. Un archivo generado en `~/.local/bin`, como `agy`, tiene que ser un stub que hace `exec` de un script publicado en `/usr/share/omarchy/bin`, para que un cambio de flags viaje con el paquete. `migrations/1791266899.sh` es el puente del stub de bashrc y de `agy`. Cuando la máquina lo marca en `~/.local/state/omarchy/migrations/`, `omarchy-migrate` no lo vuelve a correr. No se edita ese archivo. `omarchy-reinstall-configs` copia todo el skel encima del home y no es el camino de la flota. La regla vive junto al principio de cero configuración, en [Introducción & Filosofía](/fork-docs/guide/01-introduccion/#migracion-home-existente).
 
 ```bash
 # 1. Crea el script de migración con timestamp (idempotente obligatorio)
