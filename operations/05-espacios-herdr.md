@@ -8,7 +8,7 @@ description: "How-to del 2026-10-05: los mismos espacios de Herdr en DEV y en la
 
 Caso del **2026-10-05**. Las máquinas del fork deben abrir los mismos espacios de Herdr, uno por directorio de `~/Work/tries`, y en cada espacio las pestañas `agy`, `elio` y `nvim`.
 
-El código quedó en `personal` con [robert-flo/omarchy#7](https://github.com/robert-flo/omarchy/pull/7). Este how-to es el procedimiento. No sustituye a [W4](/fork-docs/operations/00-recetas-rapidas/), [W7](/fork-docs/operations/00-recetas-rapidas/) ni [W10](/fork-docs/operations/00-recetas-rapidas/): los combina.
+El código quedó en `personal` con [robert-flo/omarchy#7](https://github.com/robert-flo/omarchy/pull/7). Este how-to es el procedimiento. No sustituye a [W4](/fork-docs/operations/00-recetas-rapidas/), [W6](/fork-docs/operations/00-recetas-rapidas/#w6), [W7](/fork-docs/operations/00-recetas-rapidas/) ni [W10](/fork-docs/operations/00-recetas-rapidas/): los combina. `elio-bin` sigue [W6](/fork-docs/operations/00-recetas-rapidas/#w6).
 
 ---
 
@@ -19,7 +19,7 @@ El código quedó en `personal` con [robert-flo/omarchy#7](https://github.com/ro
 | Lista de espacios | `default/herdr/spaces` | Nombres de directorio bajo `~/Work/tries`. Viaja en `omarchy-settings`. |
 | Seed | `bin/omarchy-herdr-seed-spaces` | Crea o reutiliza cada espacio por la API de Herdr y agrega las pestañas que falten. |
 | Teclas y tema | `config/herdr/config.toml` | Sigue siendo config de usuario. `omarchy refresh herdr` la copia a `~/.config/herdr/config.toml`. |
-| `elio` | `migrations/1791260741.sh` | `omarchy-pkg-aur-add elio-bin`. El paquete es `aur/elio-bin`, no está en los repos de pacman. |
+| `elio` | `install/omarchy-aur.packages` | Una línea `elio-bin`. `omarchy-pkg-sync` lo instala con `omarchy-pkg-aur-add`. El paquete es `aur/elio-bin`. `migrations/1791260741.sh` queda como precedente, no como receta. |
 
 `omarchy refresh herdr` refresca `config.toml` y, si el server de Herdr está corriendo, llama al seed. Si Herdr está cerrado, las teclas igual se actualizan y los espacios esperan a la próxima corrida con Herdr abierto.
 
@@ -39,7 +39,7 @@ Agregar un proyecto es una línea en `default/herdr/spaces`.
 
 **`/etc/skel` no actualiza una máquina que ya tiene usuario.** `config/` se instala en `/etc/skel/.config/` para una cuenta nueva y, en paralelo, en `/usr/share/omarchy/config/` para el refresh. `omarchy-reinstall-configs` copia todo el skel encima de `$HOME`, sin backup. Eso es un reset del home, no el update de la flota.
 
-**`install/omarchy-base.packages` no instala paquetes del AUR.** `omarchy reinstall pkgs` pide esa lista por pacman. `elio-bin` entra por `omarchy-pkg-aur-add` dentro de una migración. `omarchy update` corre `omarchy-migrate` y así lo instala en las hijas que ya existen. Un usuario creado con el provisioning de primera instalación marca las migraciones como hechas sin ejecutarlas; esas cuentas no pasan por este camino.
+**`elio-bin` entra por `install/omarchy-aur.packages`.** No va en `omarchy-base.packages`: `omarchy reinstall pkgs` y pacman no ven el AUR. `omarchy-pkg-sync` lee esa lista y llama `omarchy-pkg-aur-add`. `migrations/1791260741.sh` queda como precedente de cuando el paquete entró por migración; no es la receta del próximo paquete del AUR. La receta vigente es [W6](/fork-docs/operations/00-recetas-rapidas/#w6). El código está en [robert-flo/omarchy#17](https://github.com/robert-flo/omarchy/pull/17), todavía sin merge.
 
 **Un push a `personal` no publica.** `release-personal.yml` solo corre por `workflow_dispatch`. No hace falta una release por cada commit, ni hay que esperar a que upstream saque `4.0.5`. Se publica cuando la flota debe recibir el cambio. El mismo `4.0.4` se republica subiendo el `pkgrel`. Si upstream etiqueta `4.0.5`, a las 04:00 `sync-check.yml` dispara la release, rebasea `personal` y, si no hay conflicto, publica `4.0.5-99` con los commits que ya estaban en `personal`.
 
@@ -52,11 +52,10 @@ Agregar un proyecto es una línea en `default/herdr/spaces`.
 ```bash
 cd ~/Work/omarchy/omarchy-installer
 omarchy dev pkg-test
-omarchy-migrate
 omarchy refresh herdr
 ```
 
-`omarchy dev pkg-test` instala `omarchy-settings-dev` y `omarchy-dev` como `dev.<sha>` y deja la máquina en el canal `-dev`. No sube nada a GitHub. `omarchy-migrate` aplica la migración de `elio-bin` (en gracie el paquete ya está, así que no reinstala). `omarchy refresh herdr` baja `config.toml` y siembra los espacios.
+`omarchy dev pkg-test` instala `omarchy-settings-dev` y `omarchy-dev` como `dev.<sha>` y deja la máquina en el canal `-dev`. No sube nada a GitHub. Al final corre `omarchy-pkg-sync`, que instala lo que falte de `omarchy-base.packages` y `omarchy-aur.packages` (en gracie, `elio-bin` si no está). gracie no corre `omarchy update`. `omarchy refresh herdr` baja `config.toml` y siembra los espacios.
 
 ---
 
@@ -76,4 +75,4 @@ omarchy update
 omarchy refresh herdr
 ```
 
-`omarchy update` instala los paquetes sombreados y corre la migración de `elio-bin`. No copia la sesión a `~/.config`. Los espacios los arma el refresh.
+`omarchy update` instala los paquetes sombreados y corre `omarchy-pkg-sync`: `--repos` después de los paquetes del sistema, con sudo todavía autorizado; `--aur` en la fase fría, sin cachear sudo. Así entra `elio-bin` si falta. No copia la sesión a `~/.config`. Los espacios los arma el refresh.

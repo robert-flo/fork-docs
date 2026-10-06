@@ -63,7 +63,7 @@ Para aplicar cambios a usuarios existentes, la vía depende de si el home ya lee
 | **Día a día** | **Archivo que el home ya lee desde `/usr`** | Alias, rutas de Android, flags. Tras el paquete, un shell nuevo los ve. Sin migración nueva. |
 | **Puente de una vez** | **Migración (`migrations/*.sh`)** | El home todavía no tiene el stub, o hay que reemplazar una vez un archivo generado viejo. |
 | **Pruebas inmediatas en tu máquina** | **Refresh manual** | Cuando estás probando cambios localmente y deseas forzar la actualización inmediata. |
-| **Espacios Herdr** | **`omarchy refresh herdr` con Herdr abierto** | El update instala el comando y la migración de `elio-bin`. Los espacios se arman al refrescar. Ver [Espacios Herdr de la flota](/fork-docs/operations/05-espacios-herdr/). |
+| **Espacios Herdr** | **`omarchy refresh herdr` con Herdr abierto** | `elio-bin` entra por la lista AUR ([W6](/fork-docs/operations/00-recetas-rapidas/#w6)). Los espacios se arman al refrescar. Ver [Espacios Herdr de la flota](/fork-docs/operations/05-espacios-herdr/). |
 
 ### Comandos de Refresh Manual
 
