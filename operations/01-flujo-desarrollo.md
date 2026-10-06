@@ -140,3 +140,30 @@ Al seguir este bucle:
 * Ahorras tiempo iterando en tiempo real con `dev link`.
 * Garantizas que ningún error de empaquetado o ruta fija rota llegue a GitHub gracias a `pkg-test`.
 * Mantienes tu estación de trabajo limpia y alineada con la flota.
+
+---
+
+## 5. El Flujo Integral de Validación con Migraciones de Estado
+
+Cuando tu cambio en el fork introduce una **migración de estado** (`migrations/<timestamp>.sh`) o requiere que una máquina existente ejecute lógica de aprovisionamiento antes de que los componentes vivos tomen efecto, el bucle en DEV debe seguir una secuencia estricta de 4 pasos:
+
+```bash
+cd ~/Work/tries/pj-omarchy/fo-omarchy
+omarchy dev pkg-test
+omarchy-migrate
+omarchy refresh <componente>
+```
+
+### Anatomía Técnica de la Secuencia:
+
+1. **`cd ~/Work/tries/pj-omarchy/fo-omarchy` (o tu checkout local):**  
+   Te sitúa en la raíz del árbol de fuentes del fork (rama `personal`) para que las herramientas de desarrollo detecten el repositorio correcto.
+2. **`omarchy dev pkg-test`:**  
+   Compila localmente e instala los paquetes provisionales `omarchy-dev` y `omarchy-settings-dev` (etiquetados como `dev.<commit-sha>`). Esto deposita el nuevo script de migración en `/usr/share/omarchy/migrations/` y actualiza los binarios del sistema.
+3. **`omarchy-migrate`:**  
+   Examina `/usr/share/omarchy/migrations/`, detecta los scripts que aún no tienen marca en `~/.local/state/omarchy/migrations/` y los ejecuta en el contexto de tu usuario en `gracie`. Sin este paso, el script de migración recién instalado queda inactivo en disco sin ejecutarse.
+4. **`omarchy refresh <componente>`:**  
+   Fuerza la recarga o reconciliación inmediata del componente en caliente (`config <relpath>`, `applications`, `hyprland`, `herdr`, etc.) para verificar visual y funcionalmente que el estado final del escritorio es el esperado.
+
+> **Regla de Oro:**  
+> Si tu cambio **no** agrega ni modifica ningún archivo bajo `migrations/`, el paso 3 (`omarchy-migrate`) no realiza ninguna acción. En ese caso, para cambios que admiten el Modo Live, basta con usar `omarchy dev link` y recargar directamente con `omarchy refresh`.
