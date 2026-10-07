@@ -61,6 +61,15 @@ flowchart TD
 * **Actualización en la flota:** La flota modifica el archivo central en `default/<app>/`. Cuando el usuario actualiza mediante `omarchy update`, `pacman` actualiza el archivo central y todos los stubs heredan la nueva configuración de inmediato sin alterar los overrides locales.
 * **Ejemplos canónicos:** `hyprland` (`source = ~/.local/state/omarchy/current/theme/hyprland.conf`), `foot` (`include=~/.local/state/omarchy/current/theme/foot.ini`), `bash` (`default/bash/env-bootstrap`).
 
+##### Patrón Arquitectónico: Submódulo Anexo (Prevención de Conflictos de Rebase)
+Al extender o modificar configuraciones centrales gobernadas por upstream dentro del Nivel 2 (como Hyprland en `default/hypr/`):
+* **Antipatrón Prohibido:** Editar o comentar líneas directamente en los archivos originales provistos por upstream (por ejemplo, `default/hypr/looknfeel.lua` o `default/hypr/bindings/tiling.lua`). Cualquier diff invasivo en estos archivos provoca colisiones y conflictos de rebase en git durante el cron desatendido de sincronización de las 04:00 AM (`sync-check.yml`).
+* **Patrón Canónico de Submódulo Anexo:**
+  1. **Crear un módulo propio nuevo e independiente:** Ubicar la personalización en un archivo dedicado (por ejemplo, `default/hypr/scrolling.lua`) conteniendo exclusivamente la configuración, opciones y enlaces de teclas (`o.rebind`/`o.bind`) de la nueva funcionalidad.
+  2. **Invocación única en el orquestador:** Agregar únicamente un `require` al final del archivo orquestador principal (por ejemplo, `require("default.hypr.scrolling")` al pie de `default/hypr/omarchy.lua`).
+  3. **Diff cero con upstream:** Los archivos originales de upstream permanecen 100% idénticos a su versión original (`looknfeel.lua`, `tiling.lua`, etc.).
+  4. **Impacto en el pipeline de sincronización:** Cuando upstream publica cambios o refactorizaciones, git aplica los commits limpios durante el rebase sin fricción. La única línea anexa al final del orquestador se preserva sin generar conflictos manuales.
+
 #### Nivel 3: Enlace Simbólico Gestionado (Symlink)
 * **Capacidad requerida:** La aplicación requiere un archivo o carpeta en `$HOME/.config/<app>/`, no soporta directivas `source`/`include`, pero no sobreescribe destructivamente los symlinks (solo lee de ellos).
 * **Dónde vive en el repo:** El archivo o directorio maestro reside en el paquete (`/usr/share/omarchy/...`). El symlink en `$HOME` se materializa durante `omarchy-provision-user` o una migración puntual.
