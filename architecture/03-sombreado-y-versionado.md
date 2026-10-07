@@ -85,3 +85,16 @@ Server = https://robert-flo.github.io/omarchy-personal-repo/stable/$arch
 ```
 
 Pacman evalúa los repositorios en el orden en que aparecen en el archivo de configuración. Al colocar `[omarchy-personal]` en primer lugar, pacman resuelve los metadatos de nuestros paquetes antes de consultar las réplicas oficiales.
+
+---
+
+## 5. Sombreado en Modo DEV vs Flota de Producción
+
+Existe una distinción arquitectónica fundamental entre las máquinas cliente de la flota y las estaciones de desarrollo locales (como `gracie`):
+
+| Escenario | Paquetes Instalados | Esquema de Versión | Mecanismo de Prevalencia |
+| :--- | :--- | :--- | :--- |
+| **Flota (Producción)** | `omarchy`<br>`omarchy-settings` | `4.0.x-99+` | **`pkgrel >= 99`**: Prevalece sobre el oficial (`4.0.x-1`) en cualquier `pacman -Syu` o `omarchy update`. |
+| **Estación DEV (`gracie`)** | `omarchy-dev`<br>`omarchy-settings-dev` | `dev.<commit-sha>-1` | **`IgnorePkg` en `pacman.conf`**: El paquete upstream edge (`4.0.0.r...`) es ignorado por pacman para que no sobrescriba la compilación de `omarchy dev pkg-test`. |
+
+En modo DEV, `vercmp` clasificaría la versión de upstream (`4.0.0...`) por encima de la etiqueta de desarrollo (`dev...`). Por esta razón, el blindaje mediante `IgnorePkg = omarchy-dev omarchy-settings-dev` es obligatorio en toda estación de desarrollo para mantener aisladas e inviolables las pruebas pre-flight locales.

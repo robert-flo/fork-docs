@@ -82,17 +82,64 @@ Se utiliza como **filtro de calidad previo al push** y es estrictamente obligato
 
 ### Cómo Ejecutar el Modo Pre-flight
 ```bash
-# Compilar e instalar ambos paquetes (omarchy-dev y omarchy-settings-dev):
+# Compilar e instalar ambos paquetes en lockstep (omarchy-dev y omarchy-settings-dev):
 omarchy dev pkg-test
 
-# O compilar únicamente el paquete de configuraciones:
-omarchy dev pkg-test omarchy-settings-dev
+# O compilar e instalar un paquete individual desde el checkout activo:
+omarchy dev pkg-test omarchy-settings-dev ~/Work/tries/pj-omarchy/fo-omarchy
 ```
 
-### Características de los Paquetes Generados:
-* Se compilan en un directorio temporal (`/tmp/omarchy-dev-pkg-test.XXXXXX`).
-* El campo `pkgver` se marca automáticamente con `dev.<commit-sha>[.dirty]`. Al consultar `pacman -Q omarchy`, es inmediatamente evidente que el paquete proviene de una prueba local.
-* No se publica ningún archivo en repositorios remotos ni se altera el canal de producción.
+### Reglas Críticas del Empaquetado Local:
+1. **Reempaquetado e instalación limpia (Regla Dura de Arquitectura):**  
+   Está estrictamente prohibido tocar o copiar archivos en `/usr/share/omarchy/` a mano. Todo lo que resida en rutas del sistema debe ser compilado e instalado limpiamente a través de `omarchy dev pkg-test` en paquetes Arch reales gestionados por `pacman`.
+2. **Lockstep en Desarrollo:**  
+   Siempre que un cambio afecte tanto scripts/binarios como plantillas de configuración o Hyprland, compila e instala ambos paquetes (`omarchy-dev` y `omarchy-settings-dev`) desde el commit más reciente de `fo-omarchy`.
+3. **Características de los Paquetes Generados:**  
+   * Se compilan en un directorio temporal (`/tmp/omarchy-dev-pkg-test.XXXXXX`).
+   * El campo `pkgver` se marca automáticamente como `dev.<commit-sha>[.dirty]`. Al consultar `pacman -Q omarchy-dev` o `omarchy-settings-dev`, es inmediatamente evidente el commit exacto instalado.
+   * No se altera el CDN de producción de la flota ni se tocan repositorios remotos.
+
+---
+
+### Blindaje de la Máquina DEV contra Actualizaciones Upstream (`IgnorePkg`)
+
+En una estación de desarrollo como `gracie`, existe una particularidad técnica en la resolución de paquetes que debe prevenirse:
+
+#### Causa del Conflicto de Versiones:
+* Los paquetes de prueba generados por `omarchy dev pkg-test` se etiquetan con el prefijo `dev.` (por ejemplo `dev.d3cefa2f-1`).
+* El repositorio oficial upstream `[omarchy]` (`https://pkgs.omarchy.org/edge/$arch`) publica versiones numeradas como `4.0.0.r6720.g8e02fc8-1`.
+* En la semántica de ordenamiento de versiones de Arch Linux (`vercmp`), cualquier cadena numérica es evaluada como estrictamente superior a una cadena que empieza con letras:
+  ```bash
+  vercmp dev.d3cefa2f-1 4.0.0.r6720.g8e02fc8-1
+  # Resultado: -1 (ALPM considera que upstream es más nuevo)
+  ```
+* Si la máquina DEV ejecuta una actualización del sistema (`pacman -Syu` o yay), pacman asumirá erróneamente que upstream tiene una versión más reciente, descargará los paquetes oficiales y sobrescribirá `/usr/share/omarchy/`, borrando todas tus personalizaciones locales (como layouts de Hyprland, scripts o temas).
+
+#### Configuración Obligatoria de Blindaje:
+Para evitar que cualquier actualización de sistema destruya el entorno de trabajo local en máquinas DEV, se debe blindar `/etc/pacman.conf` agregando la directiva `IgnorePkg`:
+
+```ini
+# /etc/pacman.conf
+[options]
+...
+HoldPkg = pacman glibc
+IgnorePkg = omarchy-dev omarchy-settings-dev
+```
+
+#### Comando de Inyección Segura:
+```bash
+sudo sed -i '/^HoldPkg =/a IgnorePkg = omarchy-dev omarchy-settings-dev' /etc/pacman.conf
+```
+
+#### Verificación del Blindaje:
+Al ejecutar `pacman -Qu`, los paquetes de desarrollo deben figurar explícitamente marcados como ignorados:
+```bash
+pacman -Qu
+# Salida esperada:
+# omarchy-dev dev.<sha>-1 -> 4.0.0... [ignored]
+# omarchy-settings-dev dev.<sha>-1 -> 4.0.0... [ignored]
+```
+Con esta configuración, `pacman -Syu` continuará actualizando de forma transparente el kernel, navegadores y librerías del sistema, mientras mantiene inviolables tus paquetes de desarrollo local.
 
 ---
 

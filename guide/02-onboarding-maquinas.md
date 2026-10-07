@@ -161,3 +161,21 @@ Este script realiza automáticamente todos los 7 pasos del procedimiento manual:
 5. Sincronización de la configuración de pacman (`omarchy refresh pacman`).
 6. Ejecución de `omarchy update`.
 7. Provisioning del entorno de usuario (`omarchy provision user --force` + `omarchy reinstall pkgs`).
+
+---
+
+## Configuración Especial para Estaciones de Desarrollo (Máquinas DEV)
+
+Si la máquina que estás configurando es una **estación de trabajo de desarrollo** (como `gracie`) donde trabajarás sobre el código fuente de `fo-omarchy` y compilarás paquetes locales con `omarchy dev pkg-test`:
+
+1. **Blindaje de `pacman.conf`:**  
+   Debes proteger la estación para que las actualizaciones periódicas del sistema (`pacman -Syu` o yay) no sobrescriban tus paquetes de prueba `dev.<sha>` con las versiones oficiales de `pkgs.omarchy.org/edge`:
+   ```bash
+   sudo sed -i '/^HoldPkg =/a IgnorePkg = omarchy-dev omarchy-settings-dev' /etc/pacman.conf
+   ```
+2. **Reempaquetado limpio en lockstep:**  
+   Nunca modifiques `/usr/share/omarchy/` a mano. Para instalar y validar tus cambios locales en el sistema, corre siempre:
+   ```bash
+   omarchy dev pkg-test
+   ```
+   Esto compila e instala en lockstep los paquetes `omarchy-dev` y `omarchy-settings-dev` desde el commit local más reciente.

@@ -226,3 +226,41 @@ echo "Defaults:$USER !authenticate" | sudo tee /etc/sudoers.d/omarchy-temp
 omarchy update
 sudo rm /etc/sudoers.d/omarchy-temp
 ```
+
+---
+
+## 9. Incidencia: Actualización del Sistema Sobrescribe Cambios Locales en Máquina DEV
+
+### Síntoma:
+Tras ejecutar `pacman -Syu`, `omarchy update` o una actualización con un helper AUR (como `yay`) en la estación de desarrollo (`gracie`), las personalizaciones en `/usr/share/omarchy/` (como configuraciones y atajos de Hyprland, scripts o temas) desaparecen repentinamente y el sistema revierte a los valores por defecto de upstream.
+
+### Causa:
+La máquina de desarrollo tenía instalados paquetes generados localmente con `omarchy dev pkg-test`, etiquetados con el prefijo `dev.<sha>-1`.  
+El repositorio oficial upstream `[omarchy]` (`pkgs.omarchy.org/edge`) ofrece `omarchy-settings-dev` y `omarchy-dev` con numeración estándar (ej. `4.0.0.r6720.g8e02fc8-1`).  
+La comparación de versiones de ALPM (`vercmp dev.<sha>-1 4.0.0.r...`) evalúa cualquier versión numérica por encima de `dev.`, por lo que pacman interpreta que upstream tiene una versión más reciente, descarga el paquete oficial y sobrescribe `/usr/share/omarchy/`.
+
+### Procedimiento de Resolución y Blindaje:
+
+1. **Reempaquetado e instalación limpia (sin tocar `/usr/share/omarchy/` a mano):**  
+   Compila e instala ambos paquetes en lockstep desde el checkout de desarrollo activo:
+   ```bash
+   cd ~/Work/tries/pj-omarchy/fo-omarchy
+   omarchy dev pkg-test
+   ```
+   *(O de forma individual: `omarchy dev pkg-test omarchy-settings-dev ~/Work/tries/pj-omarchy/fo-omarchy` y `omarchy dev pkg-test omarchy-dev ~/Work/tries/pj-omarchy/fo-omarchy`).*
+
+2. **Blindaje permanente de la máquina en `pacman.conf`:**  
+   Inyecta la directiva `IgnorePkg` bajo la sección `[options]` de `/etc/pacman.conf`:
+   ```bash
+   sudo sed -i '/^HoldPkg =/a IgnorePkg = omarchy-dev omarchy-settings-dev' /etc/pacman.conf
+   ```
+
+3. **Verificación:**  
+   Comprueba que los paquetes queden marcados como ignorados:
+   ```bash
+   pacman -Qu
+   # Salida esperada:
+   # omarchy-dev dev.<sha>-1 -> 4.0.0... [ignored]
+   # omarchy-settings-dev dev.<sha>-1 -> 4.0.0... [ignored]
+   ```
+   Y verifica que las opciones y atajos de tu escritorio vuelvan a responder normalmente (por ejemplo: `hyprctl getoption general:layout` y `hyprctl configerrors`).
