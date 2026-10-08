@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Índice de ADRs
-description: "Índice navegable de los 9 Architecture Decision Records (ADRs) del fork personal."
+description: "Índice navegable de los 10 Architecture Decision Records (ADRs) del fork personal."
 ---
 
 # Architecture Decision Records (ADRs)
@@ -25,3 +25,5 @@ Ningún cambio futuro debe contradecir un ADR vigente sin pasar previamente por 
 | **[ADR-007](/fork-docs/adrs/ADR-007/)** | Compilación Containerizada | Aceptada | 2026-09-01 | Uso de `archlinux:base-devel` efímero en Docker. |
 | **[ADR-008](/fork-docs/adrs/ADR-008/)** | Cadencia Desatendida 04:00 AM | Aceptada | 2026-09-30 | Sincronización 1:1, rebase automático y escudo de colisiones. |
 | **[ADR-009](/fork-docs/adrs/ADR-009/)** | Desacoplamiento de la Documentación | Aceptada | 2026-09-30 | Portal web independiente Jekyll-VitePress ("Estándar de Oro"). |
+| **[ADR-010](/fork-docs/adrs/ADR-010/)** | Espacios de Desarrollo y Navegación | Aceptada | 2026-10-07 | Aislamiento modular de workspaces (8, 9, 10) y exclusiones flotantes. |
+

@@ -96,6 +96,8 @@
       url: /adrs/ADR-008/
     - title: "ADR-009: Desacoplamiento Documental"
       url: /adrs/ADR-009/
+    - title: "ADR-010: Espacios de Desarrollo y Navegación"
+      url: /adrs/ADR-010/
   docs:
     - title: "Índice de ADRs"
       url: /adrs/
@@ -117,6 +119,8 @@
       url: /adrs/ADR-008/
     - title: "ADR-009: Desacoplamiento Documental"
       url: /adrs/ADR-009/
+    - title: "ADR-010: Espacios de Desarrollo y Navegación"
+      url: /adrs/ADR-010/
 
 - title: "Referencia & Historial"
   items:
