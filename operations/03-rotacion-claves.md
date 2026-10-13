@@ -86,7 +86,7 @@ Copia la clave pública a los repositorios correspondientes:
    ```bash
    cp /tmp/omarchy-personal-repo.pub.asc ~/Work/omarchy/robert-flo_omarchy-personal/keys/
    cd ~/Work/omarchy/robert-flo_omarchy-personal
-   # Actualiza el fingerprint en default/pacman/pacman-stable.conf y README.md
+   # Actualiza el fingerprint en default/pacman/omarchy-personal.repo.snippet y README.md (pacman-stable.conf ya no se edita; ADR-003 / PR #78)
    git commit -am "security: update public signing key to 76AFFCC217DB9FC4"
    git push origin personal
    ```

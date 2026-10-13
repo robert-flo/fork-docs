@@ -84,7 +84,11 @@ Server = https://robert-flo.github.io/omarchy-personal-repo/stable/$arch
 ...
 ```
 
-Pacman evalúa los repositorios en el orden en que aparecen en el archivo de configuración. Al colocar `[omarchy-personal]` en primer lugar, pacman resuelve los metadatos de nuestros paquetes antes de consultar las réplicas oficiales.
+Pacman evalúa los repositorios en el orden en que aparecen en el archivo de configuración. En la flota, `[omarchy-personal]` debe quedar **inmediatamente antes** de `[omarchy]` (no es obligatorio anteponerlo a `[core]` si el orden personal → oficial de Omarchy ya cumple el sombreado).
+
+### Cómo lo materializa el fork (desde 2026-10-13)
+
+`default/pacman/pacman-stable.conf` en `robert-flo/omarchy` **no** contiene el bloque personal: coincide con upstream para evitar conflictos en el rebase ADR 0024. Tras `omarchy refresh pacman`, el hook `pre-refresh-pacman.d/omarchy-personal-repo` inserta `default/pacman/omarchy-personal.repo.snippet` antes de `[omarchy]`. La migración `1791380000.sh` despliega ese hook en `~/.config/omarchy/hooks/` en el primer `omarchy update`. Ver [ADR-003](../adrs/ADR-003.md) y PR [#78](https://github.com/robert-flo/omarchy/pull/78).
 
 ---
 

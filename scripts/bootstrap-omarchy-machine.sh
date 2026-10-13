@@ -29,13 +29,18 @@ ${SUDO} pacman-key --lsign-key "${KEY_ID}"
 rm -f "${TMP_KEY}"
 echo "✓ Clave GPG confiada con éxito."
 
-# 3. Inyectar [omarchy-personal] en /etc/pacman.conf
+# 3. Inyectar [omarchy-personal] en /etc/pacman.conf (bootstrap; canon ADR-003 = omarchy refresh pacman tras omarchy update)
 echo "[2/3] Configurando repositorio en ${PACMAN_CONF}..."
 if grep -q "\[omarchy-personal\]" "${PACMAN_CONF}"; then
   echo "✓ Repositorio [omarchy-personal] ya estaba presente en ${PACMAN_CONF}."
 else
-  ${SUDO} sed -i '/^\[core\]/i \[omarchy-personal\]\nSigLevel = Required DatabaseOptional\nServer = '"${REPO_URL}"'\n' "${PACMAN_CONF}"
-  echo "✓ Sección [omarchy-personal] agregada antes de [core]."
+  if grep -q '^\[omarchy\]' "${PACMAN_CONF}"; then
+    ${SUDO} sed -i '/^\[omarchy\]/i \[omarchy-personal\]\nSigLevel = Required DatabaseOptional\nServer = '"${REPO_URL}"'\n' "${PACMAN_CONF}"
+    echo "✓ Sección [omarchy-personal] agregada antes de [omarchy]."
+  else
+    ${SUDO} sed -i '/^\[core\]/i \[omarchy-personal\]\nSigLevel = Required DatabaseOptional\nServer = '"${REPO_URL}"'\n' "${PACMAN_CONF}"
+    echo "✓ Sección [omarchy-personal] agregada antes de [core] (sin [omarchy] aún)."
+  fi
 fi
 
 # 4. Sincronizar y actualizar
@@ -44,5 +49,5 @@ ${SUDO} pacman -Sy
 
 echo ""
 echo "=== Onboarding Completado Exitosamente ==="
-echo "Ahora puedes ejecutar 'omarchy update' para instalar la última versión sombreada."
+echo "Con Omarchy del fork: 'omarchy update' (migración del hook pacman) y luego 'omarchy refresh pacman'."
 echo "Para más detalles visita: https://robert-flo.github.io/fork-docs/"

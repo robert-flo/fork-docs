@@ -44,7 +44,7 @@ Omarchy emite eventos en puntos neurálgicos de su ciclo de vida a través del b
 | :--- | :--- | :--- | :--- | :--- |
 | `post-update` | `omarchy-update` | Ninguno | Tras finalizar `pacman -Syu` y `omarchy-migrate` en la terminal de actualización visible | Reconciliación de dotfiles personales (`git pull`), actualización de herramientas no gestionadas por pacman, resync de caches |
 | `post-boot` | Hyprland (`autostart.lua`) | Ninguno | 2 segundos después de inicializar la sesión gráfica de Hyprland (`sleep 2 && omarchy-hook post-boot`) | Inicio de daemons de usuario, sincronización de notas en la nube, verificación de estado de la estación de trabajo |
-| `pre-refresh-pacman` | `omarchy-refresh-pacman` | Ninguno | Justo antes de refrescar llaves GPG y listas de paquetes de pacman | Configuración de proxies de red, inyección de mirrors privados, validación de certificados |
+| `pre-refresh-pacman` | `omarchy-refresh-pacman` | Ninguno | Tras copiar la plantilla de `pacman.conf` y **antes** de refrescar llaves GPG y bases de datos | En el fork personal: inyectar `[omarchy-personal]` (ADR-003); también proxies, mirrors privados, validación de certificados |
 | `theme-set` | `omarchy-theme-set` | `$1`: Nombre del tema (ej. `catppuccin`, `nord`) | Inmediatamente tras aplicar el nuevo tema en el shell y aplicaciones base | Sincronización de temas en apps de terceros (Slack, Discord, browsers, IDEs sin integración nativa) |
 | `font-set` | `omarchy-font-set` | `$1`: Nombre de la tipografía (ej. `JetBrains Mono`) | Inmediatamente tras conmutar la fuente del sistema | Regeneración de caches de fuentes auxiliares, notificación a emuladores de terminal desacoplados |
 | `battery-low` | `omarchy-battery-low` | `$1`: Nivel porcentual de batería (ej. `15`) | Cuando el monitor de energía detecta que la batería cae por debajo del umbral de alerta | Activación de perfiles de energía agresivos, cierre seguro de procesos pesados, alertas auditivas locales |
@@ -119,7 +119,21 @@ En la primera sesión interactiva del usuario (`omarchy-provision-first-run`), e
 
 ---
 
-## 5. Tabla Comparativa: Hook vs. Migración vs. Paquete Pacman
+## 5. Hook del repositorio personal (ADR-003)
+
+Artefactos en `robert-flo/omarchy` (rama `personal`):
+
+| Pieza | Ruta en el repo | Efecto |
+| :--- | :--- | :--- |
+| Snippet | `default/pacman/omarchy-personal.repo.snippet` | Texto de la sección `[omarchy-personal]` |
+| Hook fuente | `config/omarchy/hooks/pre-refresh-pacman.d/omarchy-personal-repo` | Inserta el snippet antes de `[omarchy]` en `/etc/pacman.conf` |
+| Migración | `migrations/1791380000.sh` | `omarchy hook install pre-refresh-pacman …` en cada máquina (una vez) |
+
+Validación tras actualizar el fork: `omarchy update`, luego `omarchy refresh pacman`, y comprobar que `grep -n '^\[omarchy' /etc/pacman.conf` muestra `[omarchy-personal]` en la línea inmediatamente anterior a `[omarchy]`.
+
+---
+
+## 6. Tabla Comparativa: Hook vs. Migración vs. Paquete Pacman
 
 Para evitar el uso inadecuado de herramientas en el ecosistema, la siguiente tabla delimita cuándo utilizar cada mecanismo:
 
@@ -135,7 +149,7 @@ Para evitar el uso inadecuado de herramientas en el ecosistema, la siguiente tab
 
 ---
 
-## 6. Los Hooks como Reconciliadores Continuos
+## 7. Los Hooks como Reconciliadores Continuos
 
 En arquitecturas de flotas de trabajo, es habitual que cada usuario o máquina mantenga un conjunto de dotfiles privados o personalizaciones que van más allá del núcleo de la distribución.
 
