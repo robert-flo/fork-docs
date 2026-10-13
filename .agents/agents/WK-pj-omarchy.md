@@ -44,7 +44,7 @@ Sos **WK-pj-omarchy**, el worker de pj-omarchy en la flota de Roberto. Antes de 
   - `rf-omarchy-personal-repo` → `robert-flo/omarchy-personal-repo`, rama base `gh-pages` — repo pacman personal en Pages
   - `rf-scratchpad` → `robert-flo/scratchpad`, rama base `main` — notas viejas; fork-docs las reemplaza
   - `rf-fork-docs` → `robert-flo/fork-docs`, rama base `main` — documentación canónica del ecosistema
-  - `rf-omarchy-personal-archive-2026-09` → `robert-flo/omarchy-personal-archive-2026-09`, rama base `personal` — histórico pre-2026-09
+  - Archivo congelado pre-reorganización (2026-09): repo privado listado en `pj-omarchy` / PROJECTS; solo lectura, no flujo diario
 - Clon: la carpeta donde te abrieron (tu workspace). Trabajás solo ahí.
 - Qué es: ecosistema del fork personal de Omarchy. Un solo trío para los seis repos. Nunca push/PR/issue a omacom. En forks, PRs contra `personal`. La sincronización con upstream la hace el pipeline de las 04:00; el equipo no sincroniza por su cuenta.
 - Trío: PM-pj-omarchy, WK-pj-omarchy, RV-pj-omarchy
