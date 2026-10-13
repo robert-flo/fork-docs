@@ -33,6 +33,14 @@ Este documento unifica y centraliza el registro histórico de cambios, hitos de 
 
 ---
 
+## [2026-10-13] — Repositorio personal vía hook (ADR-003, sync ADR 0024)
+
+* **Problema:** El rebase diario de `personal` sobre el espejo `upstream` chocaba en `default/pacman/pacman-stable.conf` (issue [#76](https://github.com/robert-flo/omarchy/issues/76)) porque upstream y el fork editaban el mismo template.
+* **Solución:** PR [#78](https://github.com/robert-flo/omarchy/pull/78): `pacman-stable.conf` idéntico a upstream; snippet `omarchy-personal.repo.snippet` + hook `pre-refresh-pacman.d/omarchy-personal-repo` + migración `1791380000.sh`.
+* **Docs:** ADR-003, arquitectura (sombreado y hooks), onboarding, bootstrap y runbook actualizados en este portal.
+
+---
+
 ## [2026-10-06] — Paquetes de Arch y del AUR por lista
 
 * **Código:** [robert-flo/omarchy#17](https://github.com/robert-flo/omarchy/pull/17) (issue [#16](https://github.com/robert-flo/omarchy/issues/16)), todavía sin merge. El par lockstep de la tabla de arriba sigue en `4.0.4-99` hasta un `release-personal.yml`.
@@ -86,7 +94,7 @@ Este documento unifica y centraliza el registro histórico de cambios, hitos de 
 
 ## [2026-09-29] — Sombreado en Producción y Migración de Scratchpad
 
-* **Configuración de Pacman:** Inyección de la directiva `[omarchy-personal]` en `default/pacman/pacman-stable.conf` de `robert-flo/omarchy` (`acad076a`).
+* **Configuración de Pacman:** Inyección de `[omarchy-personal]` en `default/pacman/pacman-stable.conf` (`acad076a`). **Supersedido el 2026-10-13** por hook + snippet (ver entrada anterior); el commit histórico sigue en el log del fork.
 * **Migración de Scratchpad:** Reorganización del repositorio de notas a la raíz del espacio de trabajo y publicación como respaldo persistente en GitHub.
 
 ---

@@ -59,35 +59,31 @@ sudo pacman -U omarchy-${VER}-any.pkg.tar.zst \
 
 ---
 
-### Paso 3: Registrar el repositorio en `/etc/pacman.conf`
+### Paso 3: Repositorio personal en `pacman` (fork con Omarchy instalado)
 
-Edita `/etc/pacman.conf` y añade el bloque `[omarchy-personal]` **inmediatamente antes** de las secciones estándar de Arch Linux (`[core]`, `[extra]`) o del repositorio oficial de Omarchy.
+En máquinas que ya consumen el par del fork, **no edites** `default/pacman/pacman-stable.conf` ni pegues el bloque a mano salvo emergencia. El fork despliega la sección `[omarchy-personal]` con un hook en `omarchy refresh pacman` (ADR-003, PR [#78](https://github.com/robert-flo/omarchy/pull/78)):
 
-La posición al inicio garantiza que pacman resuelva paquetes sombreados prioritariamente desde nuestro CDN:
+1. `omarchy update` — la migración `1791380000.sh` instala `pre-refresh-pacman.d/omarchy-personal-repo` en `~/.config/omarchy/hooks/`.
+2. `sudo omarchy refresh pacman` — copia la plantilla upstream y el hook inserta el snippet **inmediatamente antes** de `[omarchy]`.
 
-```ini
-[omarchy-personal]
-SigLevel = Required DatabaseOptional
-Server = https://robert-flo.github.io/omarchy-personal-repo/stable/$arch
-```
-
-Puedes agregarlo automáticamente con este comando seguro:
+Comprueba:
 
 ```bash
-sudo sed -i '/^\[core\]/i \[omarchy-personal\]\nSigLevel = Required DatabaseOptional\nServer = https://robert-flo.github.io/omarchy-personal-repo/stable/$arch\n' /etc/pacman.conf
+grep -n '^\[omarchy' /etc/pacman.conf
+# Debe verse [omarchy-personal] en la línea anterior a [omarchy]
 ```
+
+**Bootstrap sin sección `[omarchy]` aún** (Arch puro, antes del paquete Omarchy): el script de bootstrap o un `sed` ante `[core]` registra el CDN para el `pacman -U` del paso 2; tras instalar Omarchy del fork, el paso 4 vuelve a ser la fuente de verdad.
 
 ---
 
 ### Paso 4: Sincronizar la configuración de pacman
 
-Aplica la nueva configuración de repositorios al sistema sin reemplazar los paquetes ya instalados:
-
 ```bash
 sudo omarchy refresh pacman
 ```
 
-Este comando reescribe `pacman.conf` con el orden correcto de repositorios (personal → oficial) y sincroniza la base de datos de pacman.
+Reescribe `/etc/pacman.conf` desde la plantilla upstream y aplica el hook del repositorio personal; luego sincroniza bases de datos.
 
 ---
 
@@ -157,8 +153,8 @@ Este script realiza automáticamente todos los 7 pasos del procedimiento manual:
 1. Verificación de permisos de superusuario (`sudo`).
 2. Descarga e importación segura de la clave pública GPG con validación de huella.
 3. Instalación bootstrap del par personal directamente desde el CDN.
-4. Inyección idempotente de la sección `[omarchy-personal]` en `/etc/pacman.conf`.
-5. Sincronización de la configuración de pacman (`omarchy refresh pacman`).
+4. Registro bootstrap de `[omarchy-personal]` en `/etc/pacman.conf` (ante `[omarchy]` si existe, si no ante `[core]`).
+5. Sincronización de pacman (`pacman -Sy`; en máquinas con Omarchy del fork, ejecuta además `omarchy update` + `omarchy refresh pacman` para el hook ADR-003).
 6. Ejecución de `omarchy update`.
 7. Provisioning del entorno de usuario (`omarchy provision user --force` + `omarchy reinstall pkgs`).
 

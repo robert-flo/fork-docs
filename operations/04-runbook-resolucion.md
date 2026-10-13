@@ -19,6 +19,8 @@ Recibes una notificación de GitHub o encuentras un issue abierto por el bot de 
 ### Causa:
 Upstream (`omacom/omarchy`) modificó una o más líneas de código en un archivo que también ha sido personalizado en nuestra rama `personal`. El rebase automático abortó limpiamente para no generar paquetes rotos.
 
+> **Desde 2026-10-13:** Los conflictos recurrentes en `default/pacman/pacman-stable.conf` por ADR-003 no deberían repetirse (ese archivo ya no se personaliza; ver PR [#78](https://github.com/robert-flo/omarchy/pull/78)). Si vuelven a aparecer, revisar que `personal` no reintrodujo ediciones en el template.
+
 ### Procedimiento de Resolución:
 
 1. **Abre una terminal en tu directorio local de `omarchy`:**
